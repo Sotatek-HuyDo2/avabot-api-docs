@@ -1,0 +1,1640 @@
+{
+  "openapi": "3.0.0",
+  "paths": {
+    "/api/health": {
+      "get": {
+        "operationId": "health",
+        "summary": "Get health",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/auth/login-web": {
+      "post": {
+        "operationId": "auth.login-web",
+        "summary": "Login via web portal",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginWebRequestDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "200-OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LoginWebResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["auth"]
+      }
+    },
+    "/api/auth/logout": {
+      "post": {
+        "operationId": "auth.logout",
+        "summary": "Logout",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "200-OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["auth"]
+      }
+    },
+    "/api/wallets": {
+      "get": {
+        "operationId": "wallets.list",
+        "summary": "Get my wallets by chat id",
+        "parameters": [
+          {
+            "name": "chain",
+            "required": true,
+            "in": "query",
+            "description": "Chain Id",
+            "example": 1,
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "200-OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ListWalletsResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["wallets"],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/wallets/{address}": {
+      "get": {
+        "operationId": "wallets.detail",
+        "summary": "Get wallet detail by address",
+        "parameters": [
+          {
+            "name": "address",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "chain",
+            "required": true,
+            "in": "query",
+            "description": "Chain Id",
+            "example": 1,
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "200-OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WalletResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["wallets"],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/wallets/{address}/set-withdrawal": {
+      "post": {
+        "operationId": "wallets.set-withdrawal",
+        "summary": "User set withdrawal address",
+        "parameters": [
+          {
+            "name": "address",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SetWithdrawalAddressRequestDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "200-OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SetWithdrawalAddressResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["wallets"],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/tokens/{address}": {
+      "get": {
+        "operationId": "tokens.detail",
+        "summary": "Get token detail",
+        "parameters": [
+          {
+            "name": "address",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "chain",
+            "required": true,
+            "in": "query",
+            "description": "Chain Id",
+            "example": 1,
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TokenResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["tokens"]
+      }
+    },
+    "/api/referral-rewards/summary": {
+      "get": {
+        "operationId": "referral-rewards.summary",
+        "summary": "Summary referral rewards",
+        "parameters": [
+          {
+            "name": "chain",
+            "required": true,
+            "in": "query",
+            "description": "Chain Id",
+            "example": 1,
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "200-OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReferralRewardSummaryResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["referral-rewards"],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/referral-rewards/reward-histories": {
+      "get": {
+        "operationId": "referral-rewards.reward-histories",
+        "summary": "List reward histories of user",
+        "parameters": [
+          {
+            "name": "chain",
+            "required": true,
+            "in": "query",
+            "description": "Chain Id",
+            "example": 1,
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "description": "Page number, default: 1",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "description": "Number items per page, default: 20",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "200-OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ListReferralRewardHistoriesResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["referral-rewards"],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/referral-rewards/claim-histories": {
+      "get": {
+        "operationId": "referral-rewards.claim-histories",
+        "summary": "List claim reward histories of user",
+        "parameters": [
+          {
+            "name": "chain",
+            "required": true,
+            "in": "query",
+            "description": "Chain Id",
+            "example": 1,
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "description": "Page number, default: 1",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "description": "Number items per page, default: 20",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "200-OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ListClaimRewardHistoriesResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["referral-rewards"],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/referral-rewards/claim": {
+      "post": {
+        "operationId": "referral-rewards.claim",
+        "summary": "Request claim referral rewards",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ClaimReferralRewardRequestDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "200-OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClaimReferralRewardResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["referral-rewards"],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/referral-rewards/referred-users": {
+      "get": {
+        "operationId": "referral-rewards.referred-users",
+        "summary": "List total referred users",
+        "parameters": [
+          {
+            "name": "chain",
+            "required": true,
+            "in": "query",
+            "description": "Chain Id",
+            "example": 1,
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "description": "Page number, default: 1",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "description": "Number items per page, default: 20",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "200-OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ListReferredUsersResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["referral-rewards"],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/token-balances": {
+      "get": {
+        "operationId": "token-balances.list",
+        "summary": "Get list of erc20 balances",
+        "parameters": [
+          {
+            "name": "chain",
+            "required": true,
+            "in": "query",
+            "description": "Chain Id",
+            "example": 1,
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "walletAddress",
+            "required": true,
+            "in": "query",
+            "description": "wallet address",
+            "example": "0x0",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "token",
+            "required": false,
+            "in": "query",
+            "description": "filter by token name/ address (in lowercase)",
+            "example": "0x0",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "description": "Page number, default: 1",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "description": "Number items per page, default: 20",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "200-OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ListTokenBalancesResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["token-balances"],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/loyalty-points/summary": {
+      "get": {
+        "operationId": "loyalty-points.summary",
+        "summary": "Get loyalty points by category",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "200-OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LoyaltyPointsSummaryResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["loyalty-points"],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/loyalty-points/checkin-status": {
+      "get": {
+        "operationId": "loyalty-points.checkin-status",
+        "summary": "Get user checkin status",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "200-OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetCheckInStatusResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["loyalty-points"],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/loyalty-points/ranking": {
+      "get": {
+        "operationId": "loyalty-points.ranking",
+        "summary": "Get user loyalty points ranking",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "200-OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetLoyaltyPointsStatusResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["loyalty-points"],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/deployed-tokens/{contractAddress}": {
+      "get": {
+        "operationId": "deployed-token.detail",
+        "summary": "Get deployed token detail",
+        "parameters": [
+          {
+            "name": "network",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "contractAddress",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeployedTokenResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["deployed-tokens"]
+      }
+    },
+    "/api/deployed-tokens/{contractAddress}/pools": {
+      "get": {
+        "operationId": "deployed-token.pools",
+        "summary": "Get deployed token pools",
+        "parameters": [
+          {
+            "name": "network",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "contractAddress",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ListPoolResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["deployed-tokens"]
+      }
+    }
+  },
+  "info": {
+    "title": "Avabot API Services",
+    "description": "API Services for Avabot",
+    "version": "1.0.0",
+    "contact": {}
+  },
+  "tags": [],
+  "servers": [],
+  "components": {
+    "securitySchemes": {
+      "bearer": {
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "type": "http"
+      },
+      "basic": {
+        "type": "http",
+        "scheme": "basic"
+      }
+    },
+    "schemas": {
+      "LoginWebRequestDto": {
+        "type": "object",
+        "properties": {
+          "chainId": {
+            "type": "number",
+            "description": "Chain Id",
+            "example": 1
+          },
+          "walletAddress": {
+            "type": "string",
+            "description": "Login wallet address",
+            "example": "0x0"
+          },
+          "signature": {
+            "type": "string",
+            "description": "Signature",
+            "example": "0x0"
+          }
+        },
+        "required": ["chainId", "walletAddress", "signature"]
+      },
+      "LoginWebResponseDto": {
+        "type": "object",
+        "properties": {
+          "accessToken": {
+            "type": "string",
+            "description": "Access token",
+            "example": "12342342"
+          }
+        },
+        "required": ["accessToken"]
+      },
+      "WalletResponseDto": {
+        "type": "object",
+        "properties": {
+          "userId": {
+            "type": "string",
+            "description": "Telegram chat id",
+            "example": "123456"
+          },
+          "index": {
+            "type": "number",
+            "description": "Wallet index",
+            "example": 0
+          },
+          "walletAddress": {
+            "type": "string",
+            "description": "Wallet address",
+            "example": "0x0"
+          },
+          "type": {
+            "type": "number",
+            "enum": [1, 2],
+            "description": "Wallet type",
+            "example": 1
+          },
+          "masterAddress": {
+            "type": "string",
+            "description": "Withdrawal address",
+            "example": "0x0"
+          },
+          "state": {
+            "type": "string",
+            "enum": ["undeployed", "funded", "deployed", "linked"],
+            "description": "Current state",
+            "example": "undeployed"
+          },
+          "requiredEth": {
+            "type": "string",
+            "description": "Required ETH",
+            "example": "1"
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "Created At",
+            "example": ""
+          },
+          "updatedAt": {
+            "type": "string",
+            "description": "Updated At",
+            "example": ""
+          }
+        },
+        "required": ["userId", "index", "walletAddress", "type"]
+      },
+      "ListWalletsResponseDto": {
+        "type": "object",
+        "properties": {
+          "docs": {
+            "description": "List wallets",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/WalletResponseDto"
+            }
+          }
+        },
+        "required": ["docs"]
+      },
+      "SetWithdrawalAddressRequestDto": {
+        "type": "object",
+        "properties": {
+          "chain": {
+            "type": "number",
+            "description": "Chain Id",
+            "example": 1
+          },
+          "masterAddress": {
+            "type": "string",
+            "description": "withdrawal address",
+            "example": "0x0"
+          },
+          "signature": {
+            "type": "string",
+            "description": "Signature",
+            "example": "0x0"
+          }
+        },
+        "required": ["chain", "masterAddress", "signature"]
+      },
+      "SetWithdrawalAddressResponseDto": {
+        "type": "object",
+        "properties": {
+          "opHash": {
+            "type": "string",
+            "description": "User op transaction hash",
+            "example": "0x0"
+          },
+          "transactionHash": {
+            "type": "string",
+            "description": "Transaction hash",
+            "example": "0x0"
+          }
+        }
+      },
+      "TokenResponseDto": {
+        "type": "object",
+        "properties": {
+          "network": {
+            "type": "string",
+            "enum": [
+              "ETH_MAINNET",
+              "ETH_GOERLI",
+              "ETH_SEPOLIA",
+              "BSC_MAINNET",
+              "BSC_TESTNET",
+              "POLYGON_MAINNET"
+            ],
+            "description": "Network",
+            "example": "ETH_GOERLI"
+          },
+          "address": {
+            "type": "string",
+            "description": "token address",
+            "example": "0x0"
+          },
+          "name": {
+            "type": "string",
+            "description": "token name",
+            "example": "eth"
+          },
+          "symbol": {
+            "type": "string",
+            "description": "token symbol",
+            "example": "eth"
+          },
+          "decimals": {
+            "type": "number",
+            "description": "token decimals",
+            "example": 18
+          },
+          "ethPrice": {
+            "type": "string",
+            "description": "token price by eth",
+            "example": "0.12345"
+          },
+          "usdPrice": {
+            "type": "string",
+            "description": "token price by usd",
+            "example": "1.2"
+          }
+        },
+        "required": [
+          "network",
+          "address",
+          "name",
+          "symbol",
+          "decimals",
+          "ethPrice",
+          "usdPrice"
+        ]
+      },
+      "ReferralRewardSummaryResponseDto": {
+        "type": "object",
+        "properties": {
+          "network": {
+            "type": "string",
+            "enum": [
+              "ETH_MAINNET",
+              "ETH_GOERLI",
+              "ETH_SEPOLIA",
+              "BSC_MAINNET",
+              "BSC_TESTNET",
+              "POLYGON_MAINNET"
+            ],
+            "description": "Network",
+            "example": "ETH_GOERLI"
+          },
+          "userId": {
+            "type": "string",
+            "description": "User chat id",
+            "example": "12323423"
+          },
+          "totalReferred": {
+            "type": "number",
+            "description": "Total referred",
+            "example": 0
+          },
+          "totalTxns": {
+            "type": "number",
+            "description": "Total transactions",
+            "example": 0
+          },
+          "totalRewards": {
+            "type": "string",
+            "description": "Total claimable",
+            "example": "242253452"
+          },
+          "totalClaimed": {
+            "type": "string",
+            "description": "Total claimed",
+            "example": "122342342"
+          }
+        },
+        "required": ["network", "userId"]
+      },
+      "ReferralRewardHistoryResponseDto": {
+        "type": "object",
+        "properties": {
+          "network": {
+            "type": "string",
+            "enum": [
+              "ETH_MAINNET",
+              "ETH_GOERLI",
+              "ETH_SEPOLIA",
+              "BSC_MAINNET",
+              "BSC_TESTNET",
+              "POLYGON_MAINNET"
+            ],
+            "description": "Network",
+            "example": "ETH_GOERLI"
+          },
+          "transactionHash": {
+            "type": "string",
+            "description": "Transaction hash",
+            "example": "0x0"
+          },
+          "status": {
+            "type": "string",
+            "description": "Status",
+            "example": ""
+          },
+          "blockNumber": {
+            "type": "number",
+            "description": "Block number",
+            "example": 23423
+          },
+          "senderAddress": {
+            "type": "string",
+            "description": "Sender wallet address",
+            "example": "0x0"
+          },
+          "feeAmount": {
+            "type": "string",
+            "description": "Fee amount",
+            "example": "23242342"
+          },
+          "reward": {
+            "type": "string",
+            "description": "Reward value",
+            "example": "31423"
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "Created At",
+            "example": ""
+          },
+          "updatedAt": {
+            "type": "string",
+            "description": "Updated At",
+            "example": ""
+          }
+        },
+        "required": [
+          "network",
+          "transactionHash",
+          "status",
+          "blockNumber",
+          "senderAddress",
+          "feeAmount",
+          "reward"
+        ]
+      },
+      "ListReferralRewardHistoriesResponseDto": {
+        "type": "object",
+        "properties": {
+          "totalDocs": {
+            "type": "number",
+            "example": 1,
+            "description": "Total items of list"
+          },
+          "totalPages": {
+            "type": "number",
+            "example": 1,
+            "description": "Total number of pages."
+          },
+          "page": {
+            "type": "number",
+            "example": 1,
+            "description": "The current page number of the data list"
+          },
+          "limit": {
+            "type": "number",
+            "example": 10,
+            "description": "Number of items per page"
+          },
+          "docs": {
+            "description": "List of docs",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ReferralRewardHistoryResponseDto"
+            }
+          }
+        },
+        "required": ["totalDocs", "totalPages", "page", "limit", "docs"]
+      },
+      "ClaimRewardHistoryResponseDto": {
+        "type": "object",
+        "properties": {
+          "network": {
+            "type": "string",
+            "enum": [
+              "ETH_MAINNET",
+              "ETH_GOERLI",
+              "ETH_SEPOLIA",
+              "BSC_MAINNET",
+              "BSC_TESTNET",
+              "POLYGON_MAINNET"
+            ],
+            "description": "Network",
+            "example": "ETH_GOERLI"
+          },
+          "claimedAddress": {
+            "type": "string",
+            "description": "Recipient wallet address",
+            "example": "0x0"
+          },
+          "userId": {
+            "type": "string",
+            "description": "User chat id",
+            "example": "12323423"
+          },
+          "requestId": {
+            "type": "string",
+            "description": "Request Id",
+            "example": "12323423"
+          },
+          "blockNumber": {
+            "type": "number",
+            "description": "Block number",
+            "example": 12323423
+          },
+          "blockTimestamp": {
+            "type": "number",
+            "description": "Block timestamp",
+            "example": 12323423
+          },
+          "transactionHash": {
+            "type": "string",
+            "description": "Transaction hash",
+            "example": "0x0"
+          },
+          "logIndex": {
+            "type": "number",
+            "description": "Log index",
+            "example": 0
+          },
+          "claimedAmount": {
+            "type": "string",
+            "description": "Claimed amount",
+            "example": "23242342"
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "Created At",
+            "example": ""
+          },
+          "updatedAt": {
+            "type": "string",
+            "description": "Updated At",
+            "example": ""
+          }
+        },
+        "required": [
+          "network",
+          "claimedAddress",
+          "userId",
+          "requestId",
+          "blockNumber",
+          "blockTimestamp",
+          "transactionHash",
+          "logIndex",
+          "claimedAmount"
+        ]
+      },
+      "ListClaimRewardHistoriesResponseDto": {
+        "type": "object",
+        "properties": {
+          "totalDocs": {
+            "type": "number",
+            "example": 1,
+            "description": "Total items of list"
+          },
+          "totalPages": {
+            "type": "number",
+            "example": 1,
+            "description": "Total number of pages."
+          },
+          "page": {
+            "type": "number",
+            "example": 1,
+            "description": "The current page number of the data list"
+          },
+          "limit": {
+            "type": "number",
+            "example": 10,
+            "description": "Number of items per page"
+          },
+          "docs": {
+            "description": "List of docs",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ClaimRewardHistoryResponseDto"
+            }
+          }
+        },
+        "required": ["totalDocs", "totalPages", "page", "limit", "docs"]
+      },
+      "ClaimReferralRewardRequestDto": {
+        "type": "object",
+        "properties": {
+          "chain": {
+            "type": "number",
+            "description": "Chain Id",
+            "example": 1
+          },
+          "withdrawalAddress": {
+            "type": "string",
+            "description": "Withdrawal address",
+            "example": "0x0"
+          }
+        },
+        "required": ["chain", "withdrawalAddress"]
+      },
+      "ClaimReferralRewardResponseDto": {
+        "type": "object",
+        "properties": {
+          "method": {
+            "type": "string",
+            "description": "Request method",
+            "example": "withdraw"
+          },
+          "userId": {
+            "type": "string",
+            "description": "User ID",
+            "example": "5268872818"
+          },
+          "currency": {
+            "type": "string",
+            "description": "Currency",
+            "example": "0x0"
+          },
+          "totalRewards": {
+            "type": "string",
+            "description": "Total rewards",
+            "example": "2252342312"
+          },
+          "requestId": {
+            "type": "string",
+            "description": "Request id",
+            "example": "1223421-1231231"
+          },
+          "deadline": {
+            "type": "number",
+            "description": "Deadline",
+            "example": 600
+          },
+          "signature": {
+            "type": "string",
+            "description": "Signature",
+            "example": "0x0"
+          }
+        },
+        "required": [
+          "method",
+          "userId",
+          "currency",
+          "totalRewards",
+          "requestId",
+          "deadline",
+          "signature"
+        ]
+      },
+      "ReferredUsersResponseDto": {
+        "type": "object",
+        "properties": {
+          "userId": {
+            "type": "string",
+            "description": "User ID",
+            "example": "5268872818"
+          },
+          "displayName": {
+            "type": "string",
+            "description": "Displayname",
+            "example": "An Dao Xuan"
+          },
+          "joiningDate": {
+            "format": "date-time",
+            "type": "string",
+            "description": "joining date",
+            "example": "2023-10-24T06:07:30.857+00:00"
+          },
+          "totalRewards": {
+            "type": "string",
+            "description": "Total rewards",
+            "example": "2252342312"
+          },
+          "totalTransactions": {
+            "type": "number",
+            "description": "total transactions",
+            "example": "10"
+          }
+        },
+        "required": [
+          "userId",
+          "displayName",
+          "joiningDate",
+          "totalRewards",
+          "totalTransactions"
+        ]
+      },
+      "ListReferredUsersResponseDto": {
+        "type": "object",
+        "properties": {
+          "totalDocs": {
+            "type": "number",
+            "example": 1,
+            "description": "Total items of list"
+          },
+          "totalPages": {
+            "type": "number",
+            "example": 1,
+            "description": "Total number of pages."
+          },
+          "page": {
+            "type": "number",
+            "example": 1,
+            "description": "The current page number of the data list"
+          },
+          "limit": {
+            "type": "number",
+            "example": 10,
+            "description": "Number of items per page"
+          },
+          "docs": {
+            "description": "List of docs",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ReferredUsersResponseDto"
+            }
+          }
+        },
+        "required": ["totalDocs", "totalPages", "page", "limit", "docs"]
+      },
+      "TokenBalanceResponseDto": {
+        "type": "object",
+        "properties": {
+          "network": {
+            "type": "string",
+            "enum": [
+              "ETH_MAINNET",
+              "ETH_GOERLI",
+              "ETH_SEPOLIA",
+              "BSC_MAINNET",
+              "BSC_TESTNET",
+              "POLYGON_MAINNET"
+            ],
+            "description": "Network",
+            "example": "ETH_GOERLI"
+          },
+          "name": {
+            "type": "string",
+            "description": "Token name",
+            "example": "Uniswap"
+          },
+          "symbol": {
+            "type": "string",
+            "description": "Token symbol",
+            "example": "UNI"
+          },
+          "address": {
+            "type": "string",
+            "description": "Token address",
+            "example": "0x0"
+          },
+          "balance": {
+            "type": "string",
+            "description": "Balance",
+            "example": "0.12312"
+          },
+          "price": {
+            "type": "string",
+            "description": "Token value by USD",
+            "example": "0.00122"
+          },
+          "invested": {
+            "type": "string",
+            "description": "Total invested by USD",
+            "example": "213.212"
+          },
+          "totalPnL": {
+            "type": "string",
+            "description": "Total PnL by USD",
+            "example": "3123.21"
+          },
+          "pnlPercent": {
+            "type": "string",
+            "description": "Total PnL by percents",
+            "example": "0.123"
+          }
+        },
+        "required": [
+          "network",
+          "name",
+          "symbol",
+          "address",
+          "balance",
+          "price",
+          "invested",
+          "totalPnL",
+          "pnlPercent"
+        ]
+      },
+      "ListTokenBalancesResponseDto": {
+        "type": "object",
+        "properties": {
+          "totalDocs": {
+            "type": "number",
+            "example": 1,
+            "description": "Total items of list"
+          },
+          "totalPages": {
+            "type": "number",
+            "example": 1,
+            "description": "Total number of pages."
+          },
+          "page": {
+            "type": "number",
+            "example": 1,
+            "description": "The current page number of the data list"
+          },
+          "limit": {
+            "type": "number",
+            "example": 10,
+            "description": "Number of items per page"
+          },
+          "docs": {
+            "description": "List of docs",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TokenBalanceResponseDto"
+            }
+          }
+        },
+        "required": ["totalDocs", "totalPages", "page", "limit", "docs"]
+      },
+      "LoyaltyPointCategoryResponseDto": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "number",
+            "enum": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16],
+            "description": "Action type",
+            "example": "1"
+          },
+          "pointPerAction": {
+            "type": "string",
+            "description": "Point per action",
+            "example": 1,
+            "default": 1
+          },
+          "count": {
+            "type": "number",
+            "description": "Action count",
+            "example": 0,
+            "default": 0
+          },
+          "gainedPoints": {
+            "type": "number",
+            "description": "Gained Points",
+            "example": 0,
+            "default": 0
+          }
+        },
+        "required": ["type", "pointPerAction", "count", "gainedPoints"]
+      },
+      "LoyaltyPointsSummaryResponseDto": {
+        "type": "object",
+        "properties": {
+          "actions": {
+            "description": "Loyalty points by category",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LoyaltyPointCategoryResponseDto"
+            }
+          },
+          "tierTradingVolume": {
+            "type": "number",
+            "description": "tier trading volume",
+            "default": 0
+          }
+        },
+        "required": ["actions", "tierTradingVolume"]
+      },
+      "GetCheckInStatusResponseDto": {
+        "type": "object",
+        "properties": {
+          "dailyCheckInStreak": {
+            "type": "number",
+            "description": "Check in streak in 7 days"
+          },
+          "lastDateCheckIn": {
+            "type": "number",
+            "description": "Last date check in of user (unix)"
+          },
+          "totalPoints": {
+            "type": "number",
+            "description": "Total point of user"
+          }
+        },
+        "required": ["dailyCheckInStreak", "lastDateCheckIn", "totalPoints"]
+      },
+      "GetLoyaltyPointsStatusResponseDto": {
+        "type": "object",
+        "properties": {
+          "points": {
+            "type": "number",
+            "description": "Total current points of user"
+          },
+          "rank": {
+            "type": "number",
+            "description": "Rank of user"
+          }
+        },
+        "required": ["points", "rank"]
+      },
+      "DeployedTokenResponseDto": {
+        "type": "object",
+        "properties": {
+          "network": {
+            "type": "string",
+            "enum": [
+              "ETH_MAINNET",
+              "ETH_GOERLI",
+              "ETH_SEPOLIA",
+              "BSC_MAINNET",
+              "BSC_TESTNET",
+              "POLYGON_MAINNET"
+            ],
+            "example": "ETH_GOERLI"
+          },
+          "blockNumber": {
+            "type": "number",
+            "enum": [],
+            "example": 1343234
+          },
+          "txId": {
+            "type": "number",
+            "enum": [],
+            "example": "0x123..."
+          },
+          "deployer": {
+            "type": "number",
+            "enum": [],
+            "example": "0x123..."
+          },
+          "contractAddress": {
+            "type": "number",
+            "enum": [],
+            "example": "0x123..."
+          },
+          "name": {
+            "type": "number",
+            "enum": [],
+            "example": "JACK"
+          },
+          "symbol": {
+            "type": "number",
+            "enum": [],
+            "example": "JACK"
+          },
+          "decimals": {
+            "type": "number",
+            "enum": [],
+            "example": 9
+          },
+          "totalSupply": {
+            "type": "number",
+            "enum": [],
+            "example": "1"
+          },
+          "owner": {
+            "type": "number",
+            "enum": [],
+            "example": "0x123..."
+          },
+          "launchMethod": {
+            "type": "number",
+            "enum": [],
+            "example": "launch"
+          },
+          "launchMethodId": {
+            "type": "number",
+            "enum": [],
+            "example": "0x123..."
+          },
+          "verified": {
+            "type": "number",
+            "enum": [],
+            "example": true
+          },
+          "tradingEnabled": {
+            "type": "number",
+            "enum": [],
+            "example": true
+          },
+          "lpLocked": {
+            "type": "number",
+            "enum": [],
+            "example": true
+          },
+          "lastVerifiedCheckedAt": {
+            "type": "number",
+            "enum": [],
+            "example": "2023-11-29T14:59:46.970Z"
+          }
+        },
+        "required": [
+          "network",
+          "blockNumber",
+          "txId",
+          "deployer",
+          "contractAddress",
+          "name",
+          "symbol",
+          "decimals",
+          "totalSupply",
+          "owner",
+          "launchMethod",
+          "launchMethodId",
+          "verified",
+          "tradingEnabled",
+          "lpLocked",
+          "lastVerifiedCheckedAt"
+        ]
+      },
+      "PoolResponseDto": {
+        "type": "object",
+        "properties": {
+          "address": {
+            "type": "string",
+            "description": "address",
+            "example": "0x10000000000000000000000000000000"
+          },
+          "network": {
+            "type": "string",
+            "description": "network",
+            "example": "ETH_GOERLI"
+          },
+          "fee": {
+            "type": "number",
+            "description": "fee",
+            "example": 0.01
+          },
+          "tickSpacing": {
+            "type": "number",
+            "description": "tickSpacing",
+            "example": 0
+          },
+          "token0": {
+            "type": "string",
+            "description": "token0",
+            "example": "0x10000000000000000000000000000000"
+          },
+          "token1": {
+            "type": "string",
+            "description": "token1",
+            "example": "0x10000000000000000000000000000000"
+          }
+        },
+        "required": [
+          "address",
+          "network",
+          "fee",
+          "tickSpacing",
+          "token0",
+          "token1"
+        ]
+      },
+      "ListPoolResponseDto": {
+        "type": "object",
+        "properties": {
+          "docs": {
+            "description": "List pool",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PoolResponseDto"
+            }
+          }
+        },
+        "required": ["docs"]
+      }
+    }
+  }
+}
