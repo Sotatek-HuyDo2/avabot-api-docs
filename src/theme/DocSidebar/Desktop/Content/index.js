@@ -1,39 +1,76 @@
-import React, { useState } from "react";
-import clsx from "clsx";
-import { ThemeClassNames } from "@docusaurus/theme-common";
-import {
-  useAnnouncementBar,
-  useScrollPosition,
-} from "@docusaurus/theme-common/internal";
-import DocSidebarItems from "@theme/DocSidebarItems";
+import React, { useEffect, useState } from "react";
+import Content from "@theme-original/DocSidebar/Desktop/Content";
+import BrowserOnly from "@docusaurus/BrowserOnly";
 import styles from "./styles.module.css";
-function useShowAnnouncementBar() {
-  const { isActive } = useAnnouncementBar();
-  const [showAnnouncementBar, setShowAnnouncementBar] = useState(isActive);
-  useScrollPosition(
-    ({ scrollY }) => {
-      if (isActive) {
-        setShowAnnouncementBar(scrollY === 0);
-      }
-    },
-    [isActive]
+import clsx from "clsx";
+
+const categories = [
+  {
+    category: "ETH Mainnet",
+    key: "/docs/eth",
+    baseUrl: "/docs/eth/avabot-api-services",
+  },
+  { category: "BSC Mainnet", key: "/docs/bsc", baseUrl: "/docs/bsc/overview" },
+];
+
+const DropSideBar = () => {
+  const [currentCategory, setCurrentCategory] = useState(
+    categories.find((category) =>
+      window.location.pathname.startsWith(category.key)
+    ) || categories[0]
   );
-  return isActive && showAnnouncementBar;
-}
-export default function DocSidebarDesktopContent({ path, sidebar, className }) {
-  const showAnnouncementBar = useShowAnnouncementBar();
+  const [openDropdown, setOpenDropdown] = useState(false);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      const dropdown = document.getElementById("dropdown");
+      if (dropdown && !dropdown.contains(event.target)) {
+        setOpenDropdown(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
   return (
-    <nav
-      className={clsx(
-        "menu thin-scrollbar loll",
-        styles.menu,
-        showAnnouncementBar && styles.menuWithAnnouncementBar,
-        className
-      )}
-    >
-      <ul className={clsx(ThemeClassNames.docs.docSidebarMenu, "menu__list")}>
-        <DocSidebarItems items={sidebar} activePath={path} level={1} />
-      </ul>
-    </nav>
+    <div className={styles.wrapperDropdown}>
+      <div id="dropdown" className={styles.dropdown}>
+        <button
+          className={clsx(styles.btnDropdown, openDropdown && styles.active)}
+          onClick={() => setOpenDropdown((prev) => !prev)}
+        >
+          <span>{currentCategory.category || ""}</span>
+          <span className="clean-btn menu__caret"></span>
+        </button>
+
+        {openDropdown && (
+          <ul className={clsx(styles.dropdownMenu, styles.showMenu)}>
+            {categories.map((item, index) => (
+              <li key={index} className={styles.dropdownItem}>
+                <a
+                  className={clsx(
+                    styles.dropdownLink,
+                    currentCategory.key === item.key && styles.active
+                  )}
+                  href={item.baseUrl}
+                >
+                  {item.category}
+                </a>
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
+    </div>
+  );
+};
+
+export default function ContentWrapper(props) {
+  return (
+    <>
+      <BrowserOnly>{() => <DropSideBar />}</BrowserOnly>
+      <Content {...props} />
+    </>
   );
 }
