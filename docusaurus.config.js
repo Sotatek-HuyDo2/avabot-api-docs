@@ -65,7 +65,13 @@ const config = {
             type: "docSidebar",
             sidebarId: "eth",
             position: "left",
-            label: "API Services",
+            label: "ETH Mainnet",
+          },
+          {
+            type: "docSidebar",
+            sidebarId: "bsc",
+            position: "left",
+            label: "BSC Mainnet",
           },
           {
             href: "https://github.com/facebook/docusaurus",

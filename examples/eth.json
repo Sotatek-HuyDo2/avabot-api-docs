@@ -4,7 +4,7 @@
     "/api/health": {
       "get": {
         "operationId": "health",
-        "summary": "Get health",
+        "summary": "Health",
         "parameters": [],
         "responses": {
           "200": {
@@ -185,6 +185,137 @@
             "bearer": []
           }
         ]
+      }
+    },
+    "/api/backend/wallets/generate": {
+      "post": {
+        "operationId": "backend.wallets.generate",
+        "summary": "Generate a new wallet",
+        "description": "Generate a new EOA wallet or AA wallet",
+        "parameters": [
+          {
+            "name": "X-API-KEY",
+            "in": "header",
+            "description": "API_KEY",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GenerateWalletsRequestDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "200-OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GenerateWalletsResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["backend.wallets"]
+      }
+    },
+    "/api/backend/wallets/index": {
+      "post": {
+        "operationId": "backend.wallets.index",
+        "summary": "Get all generated wallets",
+        "description": "Get all generated EOA or AA wallets",
+        "parameters": [
+          {
+            "name": "X-API-KEY",
+            "in": "header",
+            "description": "API_KEY",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/IndexWalletsRequestDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "200-OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/IndexWalletsResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["backend.wallets"]
+      }
+    },
+    "/api/backend/wallets/{address}": {
+      "post": {
+        "operationId": "backend.wallets.detail",
+        "summary": "Get wallet details",
+        "description": "Get details of EOA or AA wallets (name, address, balance)",
+        "parameters": [
+          {
+            "name": "X-API-KEY",
+            "in": "header",
+            "description": "API_KEY",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "address",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DetailWalletRequestDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "200-OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DetailWalletResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["backend.wallets"]
       }
     },
     "/api/tokens/{address}": {
@@ -459,6 +590,88 @@
         ]
       }
     },
+    "/api/backend/referrals": {
+      "post": {
+        "operationId": "referrals",
+        "summary": "Get referral code",
+        "description": "Get my referral program",
+        "parameters": [
+          {
+            "name": "X-API-KEY",
+            "in": "header",
+            "description": "API_KEY",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GetReferralProgramRequestDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "200-OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetReferralProgramResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["backend.referrals"]
+      }
+    },
+    "/api/backend/referrals/create-code": {
+      "post": {
+        "operationId": "referrals.create-code",
+        "summary": "Create a referral code",
+        "description": "Create a referral code",
+        "parameters": [
+          {
+            "name": "X-API-KEY",
+            "in": "header",
+            "description": "API_KEY",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateReferralCodeRequestDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "200-OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateReferralCodeResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["backend.referrals"]
+      }
+    },
     "/api/token-balances": {
       "get": {
         "operationId": "token-balances.list",
@@ -608,23 +821,15 @@
         ]
       }
     },
-    "/api/deployed-tokens/{contractAddress}": {
+    "/api/deployed-tokens/statistics": {
       "get": {
-        "operationId": "deployed-token.detail",
-        "summary": "Get deployed token detail",
+        "operationId": "deployed-token.statistics",
+        "summary": "Get deployed token statistics",
         "parameters": [
           {
-            "name": "network",
-            "required": true,
+            "name": "deployer",
+            "required": false,
             "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "contractAddress",
-            "required": true,
-            "in": "path",
             "schema": {
               "type": "string"
             }
@@ -636,7 +841,52 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/DeployedTokenResponseDto"
+                  "$ref": "#/components/schemas/StatisticsDeployedTokenDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["deployed-tokens"]
+      }
+    },
+    "/api/deployed-tokens/{contractAddress}": {
+      "get": {
+        "operationId": "deployed-token.detail",
+        "summary": "Get deployed token detail",
+        "parameters": [
+          {
+            "name": "contractAddress",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "network",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "enum": [
+                "ETH_MAINNET",
+                "ETH_GOERLI",
+                "ETH_SEPOLIA",
+                "BSC_MAINNET",
+                "BSC_TESTNET",
+                "POLYGON_MAINNET"
+              ],
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ListDeployedTokenResponseDto"
                 }
               }
             }
@@ -680,6 +930,770 @@
           }
         },
         "tags": ["deployed-tokens"]
+      }
+    },
+    "/api/pools/{address}": {
+      "get": {
+        "operationId": "pool.detail",
+        "summary": "Get pool detail",
+        "parameters": [
+          {
+            "name": "address",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "chain",
+            "required": true,
+            "in": "query",
+            "description": "Chain Id",
+            "example": 1,
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PoolResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["pools"]
+      }
+    },
+    "/api/backend/mirror-settings/index": {
+      "post": {
+        "operationId": "backend.mirror-settings.index",
+        "summary": "Get mirror settings",
+        "description": "Get all mirror (copytrade) settings ",
+        "parameters": [
+          {
+            "name": "X-API-KEY",
+            "in": "header",
+            "description": "API_KEY",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GetMirrorSettingsRequestDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "200-OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetMirrorSettingsResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["backend.mirror-settings"]
+      }
+    },
+    "/api/backend/mirror-settings": {
+      "put": {
+        "operationId": "backend.mirror-settings.update",
+        "summary": "Update mirror settings",
+        "description": "Update mirror (copytrade) settings",
+        "parameters": [
+          {
+            "name": "X-API-KEY",
+            "in": "header",
+            "description": "API_KEY",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/updateMirrorSettingRequestDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "200-OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetMirrorSettingsResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["backend.mirror-settings"]
+      }
+    },
+    "/api/backend/limit-orders/index": {
+      "post": {
+        "operationId": "limit-orders.getMany",
+        "summary": "Get pending limit orders",
+        "description": "Get all pending buy/sell limit orders",
+        "parameters": [
+          {
+            "name": "X-API-KEY",
+            "in": "header",
+            "description": "API_KEY",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GetLimitOrdersRequestDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaginationLimitOrdersResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["backend.limit-orders"]
+      }
+    },
+    "/api/backend/limit-orders": {
+      "post": {
+        "operationId": "limit-orders.create",
+        "summary": "Create limit orders",
+        "description": "Create new buy/sell limit orders",
+        "parameters": [
+          {
+            "name": "X-API-KEY",
+            "in": "header",
+            "description": "API_KEY",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateLimitOrderRequestDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LimitOrderDtoResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["backend.limit-orders"]
+      }
+    },
+    "/api/backend/limit-orders/{id}": {
+      "delete": {
+        "operationId": "limit-orders.deleteOne",
+        "summary": "Delete limit orders",
+        "description": "Delete buy/sell orders by order id",
+        "parameters": [
+          {
+            "name": "X-API-KEY",
+            "in": "header",
+            "description": "API_KEY",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LimitOrderDtoResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["backend.limit-orders"]
+      }
+    },
+    "/api/backend/bots/index": {
+      "get": {
+        "operationId": "bots.get-list-bots",
+        "summary": "Bots (Applications) management",
+        "description": "Get all bots (applications) supported by AVABOT",
+        "parameters": [
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "description": "Page number, default: 1",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "description": "Number items per page, default: 20",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "200-OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ListBotsResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["backend.bots"]
+      }
+    },
+    "/api/backend/withdrawals": {
+      "post": {
+        "operationId": "withdrawals.create",
+        "summary": "Get withdrawals",
+        "description": "Create a new withdrawal request",
+        "parameters": [
+          {
+            "name": "X-API-KEY",
+            "in": "header",
+            "description": "API_KEY",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/WithdrawRequestDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "200-OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WithdrawResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["backend.withdrawals"]
+      }
+    },
+    "/api/backend/user-settings": {
+      "post": {
+        "operationId": "user-settings.get",
+        "summary": "Get my settings",
+        "description": "Get general settings applied for trading",
+        "parameters": [
+          {
+            "name": "X-API-KEY",
+            "in": "header",
+            "description": "API_KEY",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserSettingsRequestDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "200-OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserSettingsResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["backend.user-settings"]
+      },
+      "put": {
+        "operationId": "user-settings.update",
+        "summary": "Update user settings",
+        "description": "Update general settings applied for trading",
+        "parameters": [
+          {
+            "name": "X-API-KEY",
+            "in": "header",
+            "description": "API_KEY",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateUserSettingsRequestDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "200-OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserSettingsResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["backend.user-settings"]
+      }
+    },
+    "/api/auto-sell-setting/index": {
+      "post": {
+        "operationId": "auto-sell-setting",
+        "summary": "Create new auto sell setting",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateAutoSellRequestDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "200-OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateAutoSellResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["auto-sell-setting"]
+      }
+    },
+    "/api/user-operations/send": {
+      "post": {
+        "operationId": "user-operations.send",
+        "summary": "Send user-operations",
+        "description": "Build and send user-operations from account abstraction wallet",
+        "parameters": [
+          {
+            "name": "X-API-KEY",
+            "in": "header",
+            "description": "API_KEY",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SendUserOpRequestDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "200-OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SendUserOpResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["user-operations"],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/backend/approvals/approve": {
+      "post": {
+        "operationId": "approvals.approve",
+        "summary": "Get manual approval",
+        "description": "Manual approval for a specific token",
+        "parameters": [
+          {
+            "name": "X-API-KEY",
+            "in": "header",
+            "description": "API_KEY",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ManualApproveRequestDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "200-OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ManualApproveResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["backend.approvals"]
+      }
+    },
+    "/api/backend/approvals/auto-approve": {
+      "post": {
+        "operationId": "approve.auto-approve",
+        "summary": "Get Auto-Approve",
+        "description": "Enable/Disable Auto-Approve (Automatically approve token after a buy)",
+        "parameters": [
+          {
+            "name": "X-API-KEY",
+            "in": "header",
+            "description": "API_KEY",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AutoApproveRequestDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "200-OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AutoApproveResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["backend.approvals"]
+      }
+    },
+    "/api/backend/sniper/index": {
+      "post": {
+        "operationId": "sniper.index",
+        "summary": "Get snipe settings",
+        "description": "Get all snipe settings",
+        "parameters": [
+          {
+            "name": "X-API-KEY",
+            "in": "header",
+            "description": "API_KEY",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GetSniperRequestDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "200-OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SniperResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["backend.sniper"]
+      }
+    },
+    "/api/backend/sniper": {
+      "post": {
+        "operationId": "sniper.create",
+        "summary": "Add snipes",
+        "description": "Add snipe order to the snipes list",
+        "parameters": [
+          {
+            "name": "X-API-KEY",
+            "in": "header",
+            "description": "API_KEY",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateSniperRequestDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "200-OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SniperResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["backend.sniper"]
+      }
+    },
+    "/api/backend/sniper/{id}": {
+      "delete": {
+        "operationId": "sniper.remove",
+        "summary": "Remove snipes",
+        "description": "Remove pending snipes from snipes list",
+        "parameters": [
+          {
+            "name": "X-API-KEY",
+            "in": "header",
+            "description": "API_KEY",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "200-OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeleteSniperResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["backend.sniper"]
+      }
+    },
+    "/api/backend/trades/buy": {
+      "post": {
+        "operationId": "backend.trades.buy",
+        "summary": "Buy token",
+        "description": "Manual buy a specific token",
+        "parameters": [
+          {
+            "name": "X-API-KEY",
+            "in": "header",
+            "description": "Api key",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BuyRequestDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "200-OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BuyResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["backend.trades"]
+      }
+    },
+    "/api/backend/trades/sell": {
+      "post": {
+        "operationId": "backend.trades.sell",
+        "summary": "Sell token",
+        "description": "Manual sell a specific token",
+        "parameters": [
+          {
+            "name": "X-API-KEY",
+            "in": "header",
+            "description": "Api key",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SellRequestDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "200-OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SellResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["backend.trades"]
       }
     }
   },
@@ -760,7 +1774,7 @@
             "description": "Wallet type",
             "example": 1
           },
-          "masterAddress": {
+          "ownerAddress": {
             "type": "string",
             "description": "Withdrawal address",
             "example": "0x0"
@@ -810,7 +1824,7 @@
             "description": "Chain Id",
             "example": 1
           },
-          "masterAddress": {
+          "ownerAddress": {
             "type": "string",
             "description": "withdrawal address",
             "example": "0x0"
@@ -821,7 +1835,7 @@
             "example": "0x0"
           }
         },
-        "required": ["chain", "masterAddress", "signature"]
+        "required": ["chain", "ownerAddress", "signature"]
       },
       "SetWithdrawalAddressResponseDto": {
         "type": "object",
@@ -837,6 +1851,209 @@
             "example": "0x0"
           }
         }
+      },
+      "GenerateWalletsRequestDto": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "number",
+            "enum": [1, 2],
+            "description": "Wallet types (EOA-Externally Owned Account, AA-Account Abstraction)",
+            "example": 1
+          },
+          "userId": {
+            "type": "string",
+            "description": "Telegram account Id",
+            "example": "12345678"
+          }
+        },
+        "required": ["type", "userId"]
+      },
+      "GenerateWalletsResponseDto": {
+        "type": "object",
+        "properties": {
+          "userId": {
+            "type": "string",
+            "description": "Telegram account Id",
+            "example": "12345678"
+          },
+          "walletAddress": {
+            "type": "string",
+            "description": "The address of the generated wallet",
+            "example": "0x0000000000000000000000000000000000000000"
+          },
+          "type": {
+            "type": "number",
+            "enum": [1, 2],
+            "description": "Wallet types (EOA - Externally Owned  Account, AA - Account Abstraction)",
+            "example": 1
+          },
+          "state": {
+            "type": "string",
+            "enum": ["undeployed", "funded", "deployed", "linked"],
+            "description": "Account Abstraction wallet states (Undeployed - not yet deployed into a Smart Contract Wallet)",
+            "example": "undeployed"
+          },
+          "ownerAddress": {
+            "type": "string",
+            "description": "The wallet address to which funds from Account Abstraction wallets will be withdrawn",
+            "example": "0x0000000000000000000000000000000000000000"
+          }
+        },
+        "required": ["userId", "walletAddress", "type"]
+      },
+      "IndexWalletsRequestDto": {
+        "type": "object",
+        "properties": {
+          "network": {
+            "type": "string",
+            "enum": [
+              "ETH_MAINNET",
+              "ETH_GOERLI",
+              "ETH_SEPOLIA",
+              "BSC_MAINNET",
+              "BSC_TESTNET",
+              "POLYGON_MAINNET"
+            ],
+            "description": "Blockchain networks on which Avabot supports",
+            "example": "ETH_MAINNET"
+          },
+          "userId": {
+            "type": "string",
+            "description": "Telegram account Id",
+            "example": "12345678"
+          },
+          "type": {
+            "type": "number",
+            "enum": [1, 2],
+            "description": "Wallet types (EOA-Externally Owned Account, AA-Account Abstraction)",
+            "example": 1
+          }
+        },
+        "required": ["network", "userId", "type"]
+      },
+      "BackendWalletsResponseDto": {
+        "type": "object",
+        "properties": {
+          "userId": {
+            "type": "string",
+            "description": "Telegram account Id",
+            "example": "12345678"
+          },
+          "walletAddress": {
+            "type": "string",
+            "description": "The address of the generated wallet",
+            "example": "0x0000000000000000000000000000000000000000"
+          },
+          "type": {
+            "type": "number",
+            "enum": [1, 2],
+            "description": "Wallet types (EOA - Externally Owned  Account, AA - Account Abstraction)",
+            "example": 1
+          },
+          "state": {
+            "type": "string",
+            "enum": ["undeployed", "funded", "deployed", "linked"],
+            "description": "Account Abstraction wallet states (Undeployed - not yet deployed into a Smart Contract Wallet)",
+            "example": "undeployed"
+          },
+          "ownerAddress": {
+            "type": "string",
+            "description": "The wallet address to which funds from Account Abstraction wallets will be withdrawn",
+            "example": "0x0000000000000000000000000000000000000000"
+          }
+        },
+        "required": ["userId", "walletAddress", "type"]
+      },
+      "IndexWalletsResponseDto": {
+        "type": "object",
+        "properties": {
+          "totalDocs": {
+            "type": "number",
+            "example": 1,
+            "description": "Total items of list"
+          },
+          "totalPages": {
+            "type": "number",
+            "example": 1,
+            "description": "Total number of pages."
+          },
+          "page": {
+            "type": "number",
+            "example": 1,
+            "description": "The current page number of the data list"
+          },
+          "limit": {
+            "type": "number",
+            "example": 10,
+            "description": "Number of items per page"
+          },
+          "docs": {
+            "description": "List of wallets",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/BackendWalletsResponseDto"
+            }
+          }
+        },
+        "required": ["totalDocs", "totalPages", "page", "limit", "docs"]
+      },
+      "DetailWalletRequestDto": {
+        "type": "object",
+        "properties": {
+          "network": {
+            "type": "string",
+            "enum": [
+              "ETH_MAINNET",
+              "ETH_GOERLI",
+              "ETH_SEPOLIA",
+              "BSC_MAINNET",
+              "BSC_TESTNET",
+              "POLYGON_MAINNET"
+            ],
+            "description": "Blockchain networks on which Avabot supports",
+            "example": "ETH_MAINNET"
+          },
+          "userId": {
+            "type": "string",
+            "description": "Telegram account Id",
+            "example": "12345678"
+          }
+        },
+        "required": ["network", "userId"]
+      },
+      "DetailWalletResponseDto": {
+        "type": "object",
+        "properties": {
+          "userId": {
+            "type": "string",
+            "description": "Telegram account Id",
+            "example": "12345678"
+          },
+          "walletAddress": {
+            "type": "string",
+            "description": "The address of the generated wallet",
+            "example": "0x0000000000000000000000000000000000000000"
+          },
+          "type": {
+            "type": "number",
+            "enum": [1, 2],
+            "description": "Wallet types (EOA - Externally Owned  Account, AA - Account Abstraction)",
+            "example": 1
+          },
+          "state": {
+            "type": "string",
+            "enum": ["undeployed", "funded", "deployed", "linked"],
+            "description": "Account Abstraction wallet states (Undeployed - not yet deployed into a Smart Contract Wallet)",
+            "example": "undeployed"
+          },
+          "ownerAddress": {
+            "type": "string",
+            "description": "The wallet address to which funds from Account Abstraction wallets will be withdrawn",
+            "example": "0x0000000000000000000000000000000000000000"
+          }
+        },
+        "required": ["userId", "walletAddress", "type"]
       },
       "TokenResponseDto": {
         "type": "object",
@@ -1287,6 +2504,75 @@
         },
         "required": ["totalDocs", "totalPages", "page", "limit", "docs"]
       },
+      "GetReferralProgramRequestDto": {
+        "type": "object",
+        "properties": {
+          "userId": {
+            "type": "string",
+            "description": "Telegram account Id",
+            "example": "12345678"
+          }
+        },
+        "required": ["userId"]
+      },
+      "GetReferralProgramResponseDto": {
+        "type": "object",
+        "properties": {
+          "userId": {
+            "type": "string",
+            "description": "Telegram account Id",
+            "example": "12345678"
+          },
+          "referralCode": {
+            "type": "string",
+            "description": "My referral code",
+            "example": "referralCode"
+          },
+          "trackReferralCode": {
+            "type": "string",
+            "description": "The invitation code from another",
+            "example": "trackReferralCode"
+          }
+        },
+        "required": ["userId", "referralCode", "trackReferralCode"]
+      },
+      "CreateReferralCodeRequestDto": {
+        "type": "object",
+        "properties": {
+          "userId": {
+            "type": "string",
+            "description": "Telegram account Id",
+            "example": "12345678"
+          },
+          "code": {
+            "type": "string",
+            "description": "My referral code",
+            "example": "referralCode"
+          }
+        },
+        "required": ["userId", "code"]
+      },
+      "CreateReferralCodeResponseDto": {
+        "type": "object",
+        "properties": {
+          "userId": {
+            "type": "string",
+            "description": "Telegram account Id",
+            "example": "12345678"
+          },
+          "referralCode": {
+            "type": "string",
+            "description": "My referral code",
+            "example": "referralCode"
+          },
+          "trackReferralCode": {
+            "type": "string",
+            "description": "The invitation code from another",
+            "example": "trackReferralCode"
+          }
+        },
+        "required": ["userId", "referralCode", "trackReferralCode"]
+      },
       "TokenBalanceResponseDto": {
         "type": "object",
         "properties": {
@@ -1469,6 +2755,124 @@
         },
         "required": ["points", "rank"]
       },
+      "StatisticsDeployedTokenDto": {
+        "type": "object",
+        "properties": {
+          "totalToken": {
+            "type": "number",
+            "example": "1"
+          },
+          "totalTokenLaunched": {
+            "type": "number",
+            "example": "1"
+          }
+        },
+        "required": ["totalToken", "totalTokenLaunched"]
+      },
+      "SimulateEOADto": {
+        "type": "object",
+        "properties": {
+          "canBuyAfterBlocks": {
+            "type": "number",
+            "example": 1
+          },
+          "canBuyAfterTxs": {
+            "type": "number",
+            "example": 1
+          }
+        }
+      },
+      "SimulateContractDto": {
+        "type": "object",
+        "properties": {
+          "canBuyAfterBlocks": {
+            "type": "number",
+            "example": 1
+          },
+          "canBuyAfterTxs": {
+            "type": "number",
+            "example": 1
+          }
+        }
+      },
+      "SimulateResultsResponseDto": {
+        "type": "object",
+        "properties": {
+          "buyTax": {
+            "type": "number",
+            "example": 1
+          },
+          "sellTax": {
+            "type": "number",
+            "example": 1
+          },
+          "transferTax": {
+            "type": "number",
+            "example": 1
+          },
+          "buyEstimatedGas": {
+            "type": "number",
+            "example": 1
+          },
+          "sellEstimatedGas": {
+            "type": "number",
+            "example": 1
+          },
+          "transferEstimatedGas": {
+            "type": "number",
+            "example": 1
+          },
+          "maxBuyAmount": {
+            "type": "string",
+            "example": "1"
+          },
+          "maxSellAmount": {
+            "type": "string",
+            "example": "1"
+          },
+          "eoa": {
+            "description": "simulate eoa",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/SimulateEOADto"
+              }
+            ]
+          },
+          "contracts": {
+            "description": "simulate contracts",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/SimulateContractDto"
+              }
+            ]
+          },
+          "launchFunc": {
+            "type": "string",
+            "example": "openTrading"
+          },
+          "launchFuncId": {
+            "type": "string",
+            "example": "openTradingId"
+          },
+          "isManualTrading": {
+            "type": "boolean",
+            "example": true
+          },
+          "isNoRestricted": {
+            "type": "boolean",
+            "example": true
+          },
+          "status": {
+            "type": "string"
+          },
+          "simulateError": {
+            "type": "string"
+          },
+          "isHoneyPot": {
+            "type": "boolean"
+          }
+        }
+      },
       "DeployedTokenResponseDto": {
         "type": "object",
         "properties": {
@@ -1484,100 +2888,96 @@
             ],
             "example": "ETH_GOERLI"
           },
-          "blockNumber": {
-            "type": "number",
-            "enum": [],
-            "example": 1343234
-          },
-          "txId": {
-            "type": "number",
-            "enum": [],
-            "example": "0x123..."
-          },
-          "deployer": {
-            "type": "number",
-            "enum": [],
-            "example": "0x123..."
-          },
           "contractAddress": {
-            "type": "number",
-            "enum": [],
+            "type": "string",
             "example": "0x123..."
           },
           "name": {
-            "type": "number",
-            "enum": [],
+            "type": "string",
             "example": "JACK"
           },
           "symbol": {
-            "type": "number",
-            "enum": [],
+            "type": "string",
             "example": "JACK"
           },
           "decimals": {
             "type": "number",
-            "enum": [],
             "example": 9
           },
           "totalSupply": {
-            "type": "number",
-            "enum": [],
+            "type": "string",
             "example": "1"
           },
-          "owner": {
-            "type": "number",
-            "enum": [],
+          "deployer": {
+            "type": "string",
             "example": "0x123..."
           },
-          "launchMethod": {
+          "blockNumber": {
             "type": "number",
-            "enum": [],
-            "example": "launch"
+            "example": 1343234
           },
-          "launchMethodId": {
-            "type": "number",
-            "enum": [],
+          "transactionHash": {
+            "type": "string",
+            "example": "0x123..."
+          },
+          "owner": {
+            "type": "string",
             "example": "0x123..."
           },
           "verified": {
-            "type": "number",
-            "enum": [],
+            "type": "boolean",
             "example": true
           },
           "tradingEnabled": {
-            "type": "number",
-            "enum": [],
+            "type": "boolean",
             "example": true
           },
           "lpLocked": {
-            "type": "number",
-            "enum": [],
+            "type": "boolean",
             "example": true
           },
+          "pairAddress": {
+            "type": "string",
+            "example": "0x123..."
+          },
+          "simulateResults": {
+            "description": "simulate results",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/SimulateResultsResponseDto"
+              }
+            ]
+          },
           "lastVerifiedCheckedAt": {
-            "type": "number",
-            "enum": [],
-            "example": "2023-11-29T14:59:46.970Z"
+            "format": "date-time",
+            "type": "string",
+            "example": "2023-12-20T10:40:15.100Z"
           }
         },
         "required": [
           "network",
-          "blockNumber",
-          "txId",
-          "deployer",
           "contractAddress",
           "name",
           "symbol",
           "decimals",
           "totalSupply",
-          "owner",
-          "launchMethod",
-          "launchMethodId",
-          "verified",
-          "tradingEnabled",
-          "lpLocked",
-          "lastVerifiedCheckedAt"
+          "deployer",
+          "blockNumber",
+          "transactionHash"
         ]
+      },
+      "ListDeployedTokenResponseDto": {
+        "type": "object",
+        "properties": {
+          "docs": {
+            "description": "List deployed token",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DeployedTokenResponseDto"
+            }
+          }
+        },
+        "required": ["docs"]
       },
       "PoolResponseDto": {
         "type": "object",
@@ -1613,14 +3013,7 @@
             "example": "0x10000000000000000000000000000000"
           }
         },
-        "required": [
-          "address",
-          "network",
-          "fee",
-          "tickSpacing",
-          "token0",
-          "token1"
-        ]
+        "required": ["address", "network", "token0", "token1"]
       },
       "ListPoolResponseDto": {
         "type": "object",
@@ -1634,6 +3027,1787 @@
           }
         },
         "required": ["docs"]
+      },
+      "GetMirrorSettingsRequestDto": {
+        "type": "object",
+        "properties": {
+          "network": {
+            "type": "string",
+            "enum": [
+              "ETH_MAINNET",
+              "ETH_GOERLI",
+              "ETH_SEPOLIA",
+              "BSC_MAINNET",
+              "BSC_TESTNET",
+              "POLYGON_MAINNET"
+            ],
+            "description": "Blockchain networks on which Avabot supports",
+            "example": "ETH_MAINNET"
+          },
+          "userId": {
+            "type": "string",
+            "description": "Telegram account Id",
+            "example": "12345678"
+          }
+        },
+        "required": ["network", "userId"]
+      },
+      "GetMirrorSettingsResponseDto": {
+        "type": "object",
+        "properties": {
+          "network": {
+            "type": "string",
+            "enum": [
+              "ETH_MAINNET",
+              "ETH_GOERLI",
+              "ETH_SEPOLIA",
+              "BSC_MAINNET",
+              "BSC_TESTNET",
+              "POLYGON_MAINNET"
+            ],
+            "description": "Blockchain networks on which Avabot supports",
+            "example": "ETH_MAINNET"
+          },
+          "userId": {
+            "type": "string",
+            "description": "Telegram account Id",
+            "example": "12345678"
+          },
+          "activeWallets": {
+            "description": "The wallet used to copy trade",
+            "example": ["0x0000000000000000000000000000000000000000"],
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "mirrorAddresses": {
+            "description": "The address of the copied wallet",
+            "example": ["0x0000000000000000000000000000000000000000"],
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "maxEthAmount": {
+            "type": "string",
+            "description": "The maximum amount used to copy the copied wallet",
+            "example": "10000000000"
+          }
+        },
+        "required": [
+          "network",
+          "userId",
+          "activeWallets",
+          "mirrorAddresses",
+          "maxEthAmount"
+        ]
+      },
+      "updateMirrorSettingRequestDto": {
+        "type": "object",
+        "properties": {
+          "network": {
+            "type": "string",
+            "enum": [
+              "ETH_MAINNET",
+              "ETH_GOERLI",
+              "ETH_SEPOLIA",
+              "BSC_MAINNET",
+              "BSC_TESTNET",
+              "POLYGON_MAINNET"
+            ],
+            "description": "Blockchain networks on which Avabot supports",
+            "example": "ETH_MAINNET"
+          },
+          "userId": {
+            "type": "string",
+            "description": "Telegram account Id",
+            "example": "12345678"
+          },
+          "activeWallets": {
+            "description": "The wallet used to copy trade",
+            "example": ["0x0000000000000000000000000000000000000000"],
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "mirrorAddresses": {
+            "description": "The address of the copied wallet",
+            "example": ["0x0000000000000000000000000000000000000000"],
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "maxEthAmount": {
+            "type": "string",
+            "description": "The maximum amount used to copy the copied wallet",
+            "example": "1"
+          }
+        },
+        "required": ["network", "userId"]
+      },
+      "GetLimitOrdersRequestDto": {
+        "type": "object",
+        "properties": {
+          "network": {
+            "type": "string",
+            "enum": [
+              "ETH_MAINNET",
+              "ETH_GOERLI",
+              "ETH_SEPOLIA",
+              "BSC_MAINNET",
+              "BSC_TESTNET",
+              "POLYGON_MAINNET"
+            ],
+            "description": "Blockchain networks on which Avabot supports",
+            "example": "ETH_MAINNET"
+          },
+          "userId": {
+            "type": "string",
+            "description": "Telegram account Id",
+            "example": "12345678"
+          },
+          "type": {
+            "type": "number",
+            "enum": [1, 2, 3],
+            "description": "The types of limit order: buy order or sell order",
+            "example": 1
+          }
+        },
+        "required": ["network", "userId", "type"]
+      },
+      "PaginationLimitOrdersResponseDto": {
+        "type": "object",
+        "properties": {
+          "totalDocs": {
+            "type": "number",
+            "example": 1,
+            "description": "Total items of list"
+          },
+          "totalPages": {
+            "type": "number",
+            "example": 1,
+            "description": "Total number of pages."
+          },
+          "page": {
+            "type": "number",
+            "example": 1,
+            "description": "The current page number of the data list"
+          },
+          "limit": {
+            "type": "number",
+            "example": 10,
+            "description": "Number of items per page"
+          },
+          "docs": {
+            "type": "array",
+            "items": {
+              "type": "array"
+            }
+          }
+        },
+        "required": ["totalDocs", "totalPages", "page", "limit", "docs"]
+      },
+      "BuyTriggerRequestDto": {
+        "type": "object",
+        "properties": {
+          "unitAmount": {
+            "type": "number",
+            "description": "Amount Buy with decimal",
+            "example": "\"10000000000\""
+          },
+          "priceAction": {
+            "type": "number",
+            "description": "Price action by percentage",
+            "example": "10"
+          }
+        },
+        "required": ["unitAmount", "priceAction"]
+      },
+      "SellRegularTriggerRequestDto": {
+        "type": "object",
+        "properties": {
+          "sellPercentage": {
+            "type": "number",
+            "description": "Sell percentage of wallet balance",
+            "example": "10"
+          },
+          "priceAction": {
+            "type": "number",
+            "description": "Price action by percentage",
+            "example": "10"
+          }
+        },
+        "required": ["sellPercentage", "priceAction"]
+      },
+      "SellStopLossTriggerRequestDto": {
+        "type": "object",
+        "properties": {
+          "sellPercentage": {
+            "type": "number",
+            "description": "Sell percentage of wallet balance",
+            "example": "10"
+          },
+          "priceAction": {
+            "type": "number",
+            "description": "Price action by percentage",
+            "example": "10"
+          },
+          "isEnableTrailingStopLoss": {
+            "type": "number",
+            "description": "Enable Trailing StopLoss",
+            "example": "true"
+          }
+        },
+        "required": [
+          "sellPercentage",
+          "priceAction",
+          "isEnableTrailingStopLoss"
+        ]
+      },
+      "SellMarketCapTriggerRequestDto": {
+        "type": "object",
+        "properties": {
+          "sellPercentage": {
+            "type": "number",
+            "description": "Sell percentage of wallet balance",
+            "example": "10"
+          },
+          "targetMarketCap": {
+            "type": "number",
+            "description": "MarketCap trigger by USD",
+            "example": "10000000000"
+          }
+        },
+        "required": ["sellPercentage", "targetMarketCap"]
+      },
+      "SellBlockTriggerDto": {
+        "type": "object",
+        "properties": {
+          "sellPercentage": {
+            "type": "number",
+            "description": "Sell percentage of wallet balance",
+            "example": "10"
+          },
+          "targetBlock": {
+            "type": "number",
+            "description": "Block Trigger",
+            "example": "123456"
+          }
+        },
+        "required": ["sellPercentage", "targetBlock"]
+      },
+      "CreateLimitOrderRequestDto": {
+        "type": "object",
+        "properties": {
+          "network": {
+            "type": "string",
+            "enum": [
+              "ETH_MAINNET",
+              "ETH_GOERLI",
+              "ETH_SEPOLIA",
+              "BSC_MAINNET",
+              "BSC_TESTNET",
+              "POLYGON_MAINNET"
+            ],
+            "description": "Blockchain networks on which Avabot supports",
+            "example": "ETH_MAINNET"
+          },
+          "userId": {
+            "type": "string",
+            "description": "Telegram account Id",
+            "example": "12345678"
+          },
+          "type": {
+            "type": "number",
+            "enum": [1, 2, 3],
+            "description": "The types of limit orders: buy order or sell order",
+            "example": 1
+          },
+          "walletAddress": {
+            "type": "string",
+            "description": "The address of the wallet used to make a limit order",
+            "example": "0x0000000000000000000000000000000000000000"
+          },
+          "tokenAddress": {
+            "type": "string",
+            "description": "The address of the token used to purchase a limit order",
+            "example": "0x1f9840a85d5af5bf1d1762f925bdaddc4201f984"
+          },
+          "expireTime": {
+            "type": "number",
+            "description": "Indicate the point in time at which the limit order becomes invalid",
+            "example": "72"
+          },
+          "buyTrigger": {
+            "description": "Buy Trigger Object",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/BuyTriggerRequestDto"
+              }
+            ]
+          },
+          "sellRegularTrigger": {
+            "description": "Sell Regular Trigger Object",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/SellRegularTriggerRequestDto"
+              }
+            ]
+          },
+          "sellStopLossTrigger": {
+            "description": "Sell Stop Loss Trigger Dto",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/SellStopLossTriggerRequestDto"
+              }
+            ]
+          },
+          "sellMarketCapTrigger": {
+            "description": "Sell Market Cap Trigger Object",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/SellMarketCapTriggerRequestDto"
+              }
+            ]
+          },
+          "sellBlockTrigger": {
+            "description": "Sell Block Trigger Dto",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/SellBlockTriggerDto"
+              }
+            ]
+          }
+        },
+        "required": [
+          "network",
+          "userId",
+          "type",
+          "walletAddress",
+          "tokenAddress",
+          "expireTime"
+        ]
+      },
+      "TokenInfoDto": {
+        "type": "object",
+        "properties": {
+          "address": {
+            "type": "string",
+            "description": "The address of token contract",
+            "example": "0x1f9840a85d5af5bf1d1762f925bdaddc4201f984"
+          },
+          "name": {
+            "type": "string",
+            "description": "The address of token contract",
+            "example": "Avabot"
+          },
+          "symbol": {
+            "type": "string",
+            "description": "The name of token",
+            "example": "AVA"
+          },
+          "decimals": {
+            "type": "number",
+            "description": "The number of decimals on the token",
+            "example": 18
+          }
+        },
+        "required": ["address", "name", "symbol", "decimals"]
+      },
+      "LimitOrderDtoResponse": {
+        "type": "object",
+        "properties": {
+          "network": {
+            "type": "string",
+            "enum": [
+              "ETH_MAINNET",
+              "ETH_GOERLI",
+              "ETH_SEPOLIA",
+              "BSC_MAINNET",
+              "BSC_TESTNET",
+              "POLYGON_MAINNET"
+            ],
+            "description": "Blockchain networks on which Avabot supports",
+            "example": "ETH_MAINNET"
+          },
+          "userId": {
+            "type": "string",
+            "description": "Telegram account Id",
+            "example": "12345678"
+          },
+          "type": {
+            "type": "number",
+            "enum": [1, 2, 3],
+            "description": "The types of limit orders: buy order or sell order",
+            "example": 1
+          },
+          "activeWallet": {
+            "type": "string",
+            "description": "The address of the wallet used to make a limit order"
+          },
+          "token": {
+            "description": "Token",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/TokenInfoDto"
+              }
+            ]
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "active",
+              "canceled",
+              "matched",
+              "expired",
+              "unsupported",
+              "failed"
+            ],
+            "description": "The status of the transaction: pending - pending in orders list, matched - the order is triggered, expired - the order is expired, completed - the order is successful, failed - the order is failed",
+            "example": "0x0abcd1234"
+          }
+        },
+        "required": ["network", "userId", "type", "activeWallet", "status"]
+      },
+      "RouterResponseDto": {
+        "type": "object",
+        "properties": {
+          "contractAddress": {
+            "type": "string",
+            "description": "The address of Ava Router for each version",
+            "example": "0x3DBC90069EC4683B457AdD6154B3dA2B370e33f4"
+          },
+          "displayName": {
+            "type": "string",
+            "description": "The Name of Ava Router",
+            "example": "Yak Router"
+          },
+          "version": {
+            "type": "number",
+            "description": "The version number of Ava Router",
+            "example": "1"
+          },
+          "dateReleased": {
+            "type": "string",
+            "description": "The deployment time of Ava Router for each version",
+            "example": "10 Oct 2023"
+          },
+          "status": {
+            "type": "string",
+            "enum": ["active", "outdated"],
+            "description": "The status of Ava Routers",
+            "example": "outdated"
+          }
+        },
+        "required": [
+          "contractAddress",
+          "displayName",
+          "version",
+          "dateReleased",
+          "status"
+        ]
+      },
+      "BotResponseDto": {
+        "type": "object",
+        "properties": {
+          "botId": {
+            "type": "string",
+            "description": "The identification of bot",
+            "example": "abcdefgh"
+          },
+          "botName": {
+            "type": "string",
+            "description": "The name of the bot",
+            "example": "Ava smart trading bot"
+          },
+          "description": {
+            "type": "string",
+            "description": "The introduction about all bots (applications) that Ava is making and supporting",
+            "example": "smart sniping bot"
+          },
+          "status": {
+            "type": "string",
+            "enum": ["active", "inactive"],
+            "description": "The status of the bot (application)",
+            "example": "active"
+          },
+          "routers": {
+            "description": "Router Detail",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/RouterResponseDto"
+            }
+          }
+        },
+        "required": ["botId", "botName", "status", "routers"]
+      },
+      "ListBotsResponseDto": {
+        "type": "object",
+        "properties": {
+          "totalDocs": {
+            "type": "number",
+            "example": 1,
+            "description": "Total items of list"
+          },
+          "totalPages": {
+            "type": "number",
+            "example": 1,
+            "description": "Total number of pages."
+          },
+          "page": {
+            "type": "number",
+            "example": 1,
+            "description": "The current page number of the data list"
+          },
+          "limit": {
+            "type": "number",
+            "example": 10,
+            "description": "Number of items per page"
+          },
+          "docs": {
+            "description": "List of docs",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/BotResponseDto"
+            }
+          }
+        },
+        "required": ["totalDocs", "totalPages", "page", "limit", "docs"]
+      },
+      "WithdrawRequestDto": {
+        "type": "object",
+        "properties": {
+          "network": {
+            "type": "string",
+            "enum": [
+              "ETH_MAINNET",
+              "ETH_GOERLI",
+              "ETH_SEPOLIA",
+              "BSC_MAINNET",
+              "BSC_TESTNET",
+              "POLYGON_MAINNET"
+            ],
+            "description": "Blockchain networks on which Avabot supports",
+            "example": "ETH_MAINNET"
+          },
+          "userId": {
+            "type": "string",
+            "description": "Telegram account Id",
+            "example": "12345678"
+          },
+          "walletAddress": {
+            "type": "string",
+            "description": "The address of wallet from which tokens are withdrawn",
+            "example": "0x0000000000000000000000000000000000000000"
+          },
+          "tokenAddress": {
+            "type": "string",
+            "description": "The address of withdrawn token",
+            "example": "0x1f9840a85d5af5bf1d1762f925bdaddc4201f984"
+          },
+          "amount": {
+            "type": "string",
+            "description": "The amount of withdrawn token",
+            "example": "0"
+          },
+          "recipient": {
+            "type": "string",
+            "description": "The address of recipient's wallet (Owner Address for AA wallet)",
+            "example": "0x0000000000000000000000000000000000000000"
+          }
+        },
+        "required": [
+          "network",
+          "userId",
+          "walletAddress",
+          "tokenAddress",
+          "amount"
+        ]
+      },
+      "WithdrawPayloadDto": {
+        "type": "object",
+        "properties": {
+          "tokenAddress": {
+            "type": "string",
+            "description": "The address of the withdrawn token",
+            "example": "0x1f9840a85d5af5bf1d1762f925bdaddc4201f984"
+          },
+          "recipient": {
+            "type": "string",
+            "description": "The address of the recipient's wallet (Owner Address for AA wallet)",
+            "example": "0x0000000000000000000000000000000000000000"
+          },
+          "amount": {
+            "type": "string",
+            "description": "The amount of withdrawn token",
+            "example": "0"
+          }
+        },
+        "required": ["tokenAddress", "recipient", "amount"]
+      },
+      "WithdrawResponseDto": {
+        "type": "object",
+        "properties": {
+          "network": {
+            "type": "string",
+            "enum": [
+              "ETH_MAINNET",
+              "ETH_GOERLI",
+              "ETH_SEPOLIA",
+              "BSC_MAINNET",
+              "BSC_TESTNET",
+              "POLYGON_MAINNET"
+            ],
+            "description": "Blockchain network",
+            "example": "ETH_MAINNET"
+          },
+          "userId": {
+            "type": "string",
+            "description": "Telegram user id",
+            "example": "123456"
+          },
+          "method": {
+            "type": "string",
+            "enum": [
+              "APPROVE",
+              "AUTO_APPROVE",
+              "BUY",
+              "SELL",
+              "BUY_LIMIT",
+              "SELL_LIMIT",
+              "AUTO_SELL",
+              "COPY_TRADE",
+              "SNIPE",
+              "WITHDRAW",
+              "SET_WITHDRAWAL"
+            ],
+            "description": "The method of transaction: withdraw",
+            "example": "WITHDRAW"
+          },
+          "hash": {
+            "type": "string",
+            "description": "The transaction hash (Account Abstraction wallet) or User-operations hash (Externally Owned Account)",
+            "example": "0x0"
+          },
+          "type": {
+            "type": "number",
+            "enum": [1, 2],
+            "description": "The types of transaction: transactions of Externally Owned Accounts or transactions of AA wallets",
+            "example": 1
+          },
+          "status": {
+            "type": "number",
+            "enum": [1, 2, 3, 4],
+            "description": "The status of the transaction: Rejected, Pending, Successful, Failed",
+            "example": 1
+          },
+          "payload": {
+            "description": "Withdraw payload",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/WithdrawPayloadDto"
+              }
+            ]
+          }
+        },
+        "required": [
+          "network",
+          "userId",
+          "method",
+          "hash",
+          "type",
+          "status",
+          "payload"
+        ]
+      },
+      "UserSettingsRequestDto": {
+        "type": "object",
+        "properties": {
+          "network": {
+            "type": "string",
+            "enum": [
+              "ETH_MAINNET",
+              "ETH_GOERLI",
+              "ETH_SEPOLIA",
+              "BSC_MAINNET",
+              "BSC_TESTNET",
+              "POLYGON_MAINNET"
+            ],
+            "description": "Blockchain networks on which Avabot supports",
+            "example": "ETH_MAINNET"
+          },
+          "userId": {
+            "type": "string",
+            "description": "Telegram account Id",
+            "example": "12345678"
+          }
+        },
+        "required": ["network", "userId"]
+      },
+      "UserSettingsResponseDto": {
+        "type": "object",
+        "properties": {
+          "network": {
+            "type": "string",
+            "enum": [
+              "ETH_MAINNET",
+              "ETH_GOERLI",
+              "ETH_SEPOLIA",
+              "BSC_MAINNET",
+              "BSC_TESTNET",
+              "POLYGON_MAINNET"
+            ],
+            "description": "Blockchain networks on which Avabot supports",
+            "example": "ETH_MAINNET"
+          },
+          "userId": {
+            "type": "string",
+            "description": "Telegram account Id",
+            "example": "12345678"
+          },
+          "slippage": {
+            "type": "number",
+            "description": "The difference between the expected sprice and the actual price",
+            "example": 0
+          },
+          "maxGasPrice": {
+            "type": "string",
+            "description": "The maximum gas price paid for a transaction",
+            "example": "0"
+          },
+          "gasLimit": {
+            "type": "number",
+            "description": "The maximum amount of gas units spent for a transaction",
+            "example": 0
+          },
+          "enableAntiRug": {
+            "type": "boolean",
+            "description": "Enable anti rug",
+            "example": false
+          },
+          "enableSmartSlippage": {
+            "type": "boolean",
+            "description": "Automatically adjust slippage with an appropriate value",
+            "example": false
+          },
+          "enableDegenMode": {
+            "type": "boolean",
+            "description": "Enable degen mode",
+            "example": false
+          },
+          "enablePrivateTx": {
+            "type": "boolean",
+            "description": "The transaction is sent to a private mempool to avoid MEV and sandwich attack",
+            "example": false
+          },
+          "enableFailGuard": {
+            "type": "boolean",
+            "description": "The simulation of a transaction to identify any potential execution errors",
+            "example": false
+          },
+          "enableFrontrun": {
+            "type": "boolean",
+            "description": "Use higher gas price to front run other transactions",
+            "example": false
+          },
+          "enableAutoApprove": {
+            "type": "boolean",
+            "description": "Enable/disable Auto Approve (Approve token after a successful purchase)",
+            "example": false
+          }
+        },
+        "required": ["network", "userId"]
+      },
+      "UpdateUserSettingsRequestDto": {
+        "type": "object",
+        "properties": {
+          "network": {
+            "type": "string",
+            "enum": [
+              "ETH_MAINNET",
+              "ETH_GOERLI",
+              "ETH_SEPOLIA",
+              "BSC_MAINNET",
+              "BSC_TESTNET",
+              "POLYGON_MAINNET"
+            ],
+            "description": "Blockchain networks on which Avabot supports",
+            "example": "ETH_MAINNET"
+          },
+          "userId": {
+            "type": "string",
+            "description": "Telegram account Id",
+            "example": "12345678"
+          },
+          "slippage": {
+            "type": "number",
+            "description": "The difference between the expected sprice and the actual price",
+            "example": 0
+          },
+          "maxGasPrice": {
+            "type": "string",
+            "description": "The maximum gas price paid for a transaction",
+            "example": "0"
+          },
+          "gasLimit": {
+            "type": "number",
+            "description": "The maximum amount of gas units spent for a transaction",
+            "example": 0
+          },
+          "enableAntiRug": {
+            "type": "boolean",
+            "description": "Enable anti rug",
+            "example": true
+          },
+          "enableSmartSlippage": {
+            "type": "boolean",
+            "description": "Automatically adjust slippage with an appropriate value",
+            "example": true
+          },
+          "enableDegenMode": {
+            "type": "boolean",
+            "description": "Enable degen mode",
+            "example": true
+          },
+          "enablePrivateTx": {
+            "type": "boolean",
+            "description": "The transaction is sent to a private mempool to avoid MEV and sandwich attack",
+            "example": true
+          },
+          "enableFailGuard": {
+            "type": "boolean",
+            "description": "The simulation of a transaction to identify any potential execution errors",
+            "example": true
+          },
+          "enableFrontrun": {
+            "type": "boolean",
+            "description": "Use higher gas price to front run other transactions",
+            "example": true
+          },
+          "enableAutoApprove": {
+            "type": "boolean",
+            "description": "Enable/disable Auto Approve (Approve token after a successful purchase)",
+            "example": true
+          }
+        },
+        "required": ["network", "userId"]
+      },
+      "AutoSellBlockSettingDto": {
+        "type": "object",
+        "properties": {
+          "sellPercentage": {
+            "type": "number",
+            "description": "Sell percentage",
+            "example": "100"
+          },
+          "blockAfter": {
+            "type": "number",
+            "description": "Sell after ... blocks",
+            "example": "5"
+          }
+        },
+        "required": ["sellPercentage", "blockAfter"]
+      },
+      "AutoSellMarketCapSettingDto": {
+        "type": "object",
+        "properties": {
+          "sellPercentage": {
+            "type": "number",
+            "description": "Sell percentage",
+            "example": "100"
+          },
+          "marketCap": {
+            "type": "string",
+            "description": "You will sell at market cap ...USD",
+            "example": "10000000000"
+          }
+        },
+        "required": ["sellPercentage", "marketCap"]
+      },
+      "AutoSellProfitSettingDto": {
+        "type": "object",
+        "properties": {
+          "sellPercentage": {
+            "type": "number",
+            "description": "Sell percentage",
+            "example": "100"
+          },
+          "profitPercentage": {
+            "type": "number",
+            "description": "You will sell at profit ...%",
+            "example": "300"
+          }
+        },
+        "required": ["sellPercentage", "profitPercentage"]
+      },
+      "AutoSellStopLossSettingDto": {
+        "type": "object",
+        "properties": {
+          "sellPercentage": {
+            "type": "number",
+            "description": "Sell percentage",
+            "example": "100"
+          },
+          "stoplossPercentage": {
+            "type": "number",
+            "description": "You will sell at loss ...%",
+            "example": "-10"
+          }
+        },
+        "required": ["sellPercentage", "stoplossPercentage"]
+      },
+      "CreateAutoSellRequestDto": {
+        "type": "object",
+        "properties": {
+          "isEnabled": {
+            "type": "boolean",
+            "description": "You want enable auto sell or not",
+            "example": true
+          },
+          "afterBlockSetting": {
+            "description": "Auto sell base on block setting",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/AutoSellBlockSettingDto"
+              }
+            ]
+          },
+          "marketCapSetting": {
+            "description": "Auto sell base on market cap setting",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/AutoSellMarketCapSettingDto"
+              }
+            ]
+          },
+          "profitSetting": {
+            "description": "Auto sell base on profit setting",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/AutoSellProfitSettingDto"
+              }
+            ]
+          },
+          "stopLossSetting": {
+            "description": "Auto sell base on stoploss setting",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/AutoSellStopLossSettingDto"
+              }
+            ]
+          },
+          "trailingStopLoss": {
+            "type": "boolean",
+            "description": "You want enable trailing stoploss or not",
+            "example": false
+          }
+        },
+        "required": ["isEnabled"]
+      },
+      "CreateAutoSellResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "description": "Your auto sell setting id",
+            "example": "657bc47b7ebb9c549bd472c3"
+          },
+          "isEnabled": {
+            "type": "boolean",
+            "description": "You want enable auto sell or not",
+            "example": true
+          },
+          "afterBlockSetting": {
+            "description": "Auto sell base on block setting",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/AutoSellBlockSettingDto"
+              }
+            ]
+          },
+          "marketCapSetting": {
+            "description": "Auto sell base on market cap setting",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/AutoSellMarketCapSettingDto"
+              }
+            ]
+          },
+          "profitSetting": {
+            "description": "Auto sell base on profit setting",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/AutoSellProfitSettingDto"
+              }
+            ]
+          },
+          "stopLossSetting": {
+            "description": "Auto sell base on stoploss setting",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/AutoSellStopLossSettingDto"
+              }
+            ]
+          },
+          "trailingStopLoss": {
+            "type": "boolean",
+            "description": "You want enable trailing stoploss or not",
+            "example": false
+          }
+        },
+        "required": ["id", "isEnabled"]
+      },
+      "SendUserOpRequestDto": {
+        "type": "object",
+        "properties": {
+          "network": {
+            "type": "string",
+            "enum": [
+              "ETH_MAINNET",
+              "ETH_GOERLI",
+              "ETH_SEPOLIA",
+              "BSC_MAINNET",
+              "BSC_TESTNET",
+              "POLYGON_MAINNET"
+            ],
+            "description": "Blockchain networks on which Avabot supports",
+            "example": "ETH_MAINNET"
+          },
+          "userId": {
+            "type": "string",
+            "description": "Telegram account Id",
+            "example": "12345678"
+          },
+          "walletAddress": {
+            "type": "string",
+            "description": "User wallet address",
+            "example": "0x70Ec5d6bC35f50c3209fed83Fd4Aa52A0EA36A4a"
+          },
+          "to": {
+            "type": "string",
+            "description": "Router address",
+            "example": "0x46Ec5d6bC35f50c3209fed83Fd4Aa52A0EA36A11"
+          },
+          "data": {
+            "type": "string",
+            "description": "Encoded data",
+            "example": "01010020045234520435132412345342623545"
+          },
+          "value": {
+            "type": "string",
+            "description": "Value send"
+          }
+        },
+        "required": ["network", "userId", "walletAddress", "to", "data"]
+      },
+      "SendUserOpResponseDto": {
+        "type": "object",
+        "properties": {
+          "network": {
+            "type": "string",
+            "enum": [
+              "ETH_MAINNET",
+              "ETH_GOERLI",
+              "ETH_SEPOLIA",
+              "BSC_MAINNET",
+              "BSC_TESTNET",
+              "POLYGON_MAINNET"
+            ],
+            "description": "Blockchain network",
+            "example": "ETH_MAINNET"
+          },
+          "userId": {
+            "type": "string",
+            "description": "User id",
+            "example": "5801474055"
+          },
+          "walletAddress": {
+            "type": "string",
+            "description": "User wallet address",
+            "example": "0x70Ec5d6bC35f50c3209fed83Fd4Aa52A0EA36A4a"
+          },
+          "userOpHash": {
+            "type": "string",
+            "description": "The user-operation hash ",
+            "example": "0x4c0dd6fa9e0b5e9161c1402e5876ae264eb575d37c7c74db9857d220ce3408ae"
+          }
+        },
+        "required": ["network", "userId", "walletAddress"]
+      },
+      "ManualApproveRequestDto": {
+        "type": "object",
+        "properties": {
+          "network": {
+            "type": "string",
+            "enum": [
+              "ETH_MAINNET",
+              "ETH_GOERLI",
+              "ETH_SEPOLIA",
+              "BSC_MAINNET",
+              "BSC_TESTNET",
+              "POLYGON_MAINNET"
+            ],
+            "description": "Blockchain networks on which Avabot supports",
+            "example": "ETH_MAINNET"
+          },
+          "userId": {
+            "type": "string",
+            "description": "Telegram account Id",
+            "example": "12345678"
+          },
+          "walletAddress": {
+            "type": "string",
+            "description": "Wallet address withdraw",
+            "example": "0x0000000000000000000000000000000000000000"
+          },
+          "tokenAddress": {
+            "type": "string",
+            "description": "The address of the token contract that will be approved",
+            "example": "0x1f9840a85d5af5bf1d1762f925bdaddc4201f984"
+          },
+          "amount": {
+            "type": "string",
+            "description": "The approval amount is set to the maximum",
+            "example": "Max"
+          }
+        },
+        "required": [
+          "network",
+          "userId",
+          "walletAddress",
+          "tokenAddress",
+          "amount"
+        ]
+      },
+      "ManualApprovePayloadDto": {
+        "type": "object",
+        "properties": {
+          "owner": {
+            "type": "string",
+            "description": "The address of the wallet containing token",
+            "example": "0x0000000000000000000000000000000000000000"
+          },
+          "spender": {
+            "type": "string",
+            "description": "The address of AVAbot router",
+            "example": "0x9561F8d01b470b963b27EA889478D1D9772eF7bE"
+          },
+          "tokenAddress": {
+            "type": "string",
+            "description": "The address of the token contract that will be approved",
+            "example": "0x1f9840a85d5af5bf1d1762f925bdaddc4201f984"
+          },
+          "amount": {
+            "type": "string",
+            "description": "The amount of the token to be granted approval",
+            "example": "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+          }
+        },
+        "required": ["owner", "spender", "tokenAddress", "amount"]
+      },
+      "ManualApproveResponseDto": {
+        "type": "object",
+        "properties": {
+          "network": {
+            "type": "string",
+            "enum": [
+              "ETH_MAINNET",
+              "ETH_GOERLI",
+              "ETH_SEPOLIA",
+              "BSC_MAINNET",
+              "BSC_TESTNET",
+              "POLYGON_MAINNET"
+            ],
+            "description": "Blockchain networks on which Avabot supports",
+            "example": "ETH_MAINNET"
+          },
+          "userId": {
+            "type": "string",
+            "description": "Telegram account Id",
+            "example": "12345678"
+          },
+          "method": {
+            "type": "string",
+            "enum": [
+              "APPROVE",
+              "AUTO_APPROVE",
+              "BUY",
+              "SELL",
+              "BUY_LIMIT",
+              "SELL_LIMIT",
+              "COPY_TRADE",
+              "SNIPE",
+              "WITHDRAW",
+              "CLAIM_REFERRAL_REWARD",
+              "SET_WITHDRAWAL",
+              "AUTO_SELL"
+            ],
+            "description": "The method of transaction: Approve",
+            "example": "APPROVE"
+          },
+          "hash": {
+            "type": "string",
+            "description": "The transaction hash (Account Abstraction wallet) or User-operations hash (Externally Owned Account)",
+            "example": "0x0000000000000000000000000000000000000000"
+          },
+          "type": {
+            "type": "number",
+            "enum": [1, 2],
+            "description": "The types of transaction: transactions of Externally Owned Accounts or transactions of AA wallets",
+            "example": 1
+          },
+          "status": {
+            "type": "number",
+            "enum": [1, 2, 3, 4],
+            "description": "The status of the transaction: Rejected, Pending, Successful, Failed",
+            "example": 1
+          },
+          "payload": {
+            "description": "The information should be shown",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ManualApprovePayloadDto"
+              }
+            ]
+          }
+        },
+        "required": [
+          "network",
+          "userId",
+          "method",
+          "hash",
+          "type",
+          "status",
+          "payload"
+        ]
+      },
+      "AutoApproveRequestDto": {
+        "type": "object",
+        "properties": {
+          "network": {
+            "type": "string",
+            "enum": [
+              "ETH_MAINNET",
+              "ETH_GOERLI",
+              "ETH_SEPOLIA",
+              "BSC_MAINNET",
+              "BSC_TESTNET",
+              "POLYGON_MAINNET"
+            ],
+            "description": "Blockchain networks on which Avabot supports",
+            "example": "ETH_MAINNET"
+          },
+          "userId": {
+            "type": "string",
+            "description": "Telegram account Id",
+            "example": "12345678"
+          },
+          "enableAutoApprove": {
+            "type": "boolean",
+            "description": "Enable AutoApprove",
+            "example": true
+          }
+        },
+        "required": ["network", "userId", "enableAutoApprove"]
+      },
+      "AutoApproveResponseDto": {
+        "type": "object",
+        "properties": {
+          "enableAutoApprove": {
+            "type": "boolean",
+            "description": "Indicate that Auto Approve is on",
+            "example": true
+          }
+        },
+        "required": ["enableAutoApprove"]
+      },
+      "GetSniperRequestDto": {
+        "type": "object",
+        "properties": {
+          "network": {
+            "type": "string",
+            "enum": [
+              "ETH_MAINNET",
+              "ETH_GOERLI",
+              "ETH_SEPOLIA",
+              "BSC_MAINNET",
+              "BSC_TESTNET",
+              "POLYGON_MAINNET"
+            ],
+            "description": "Blockchain networks on which Avabot supports",
+            "example": "ETH_MAINNET"
+          },
+          "userId": {
+            "type": "string",
+            "description": "Telegram account Id",
+            "example": "12345678"
+          }
+        },
+        "required": ["network", "userId"]
+      },
+      "SniperResponseDto": {
+        "type": "object",
+        "properties": {
+          "network": {
+            "type": "string",
+            "enum": [
+              "ETH_MAINNET",
+              "ETH_GOERLI",
+              "ETH_SEPOLIA",
+              "BSC_MAINNET",
+              "BSC_TESTNET",
+              "POLYGON_MAINNET"
+            ],
+            "description": "Blockchain networks on which Avabot supports",
+            "example": "ETH_MAINNET"
+          },
+          "userId": {
+            "type": "string",
+            "description": "Telegram account Id",
+            "example": "12345678"
+          },
+          "activeWallets": {
+            "description": "The wallet used to snipe token",
+            "example": ["0x0000000000000000000000000000000000000000"],
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "token": {
+            "description": "The unlaunched token that will be sniped",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/TokenInfoDto"
+              }
+            ]
+          },
+          "slippage": {
+            "type": "number",
+            "description": "The difference between expected price and actual price",
+            "example": 1
+          },
+          "maxSpendAmount": {
+            "type": "string",
+            "description": "The maximum amount used to snipe with",
+            "example": "0"
+          },
+          "firstBundleOrFail": {
+            "type": "boolean",
+            "description": "Enable/disable First bundler or fail (snipe on block 0 or fail)",
+            "example": true
+          },
+          "firstBundleBackup": {
+            "type": "boolean",
+            "description": "Enable/disable First bundler backup (allow to snipe in the first safe block in case of MEV or a dead block)",
+            "example": true
+          },
+          "snipeTip": {
+            "type": "string",
+            "description": "The amount is sent directly to the block builder to prioritize transaction",
+            "example": "0"
+          },
+          "buyTaxLimit": {
+            "type": "number",
+            "description": "The maximum acceptable buy tax for sniping",
+            "example": 0
+          },
+          "sellTaxLimit": {
+            "type": "number",
+            "description": "The maximum acceptable sell tax for sniping",
+            "example": 0
+          },
+          "enablePreApprove": {
+            "type": "boolean",
+            "description": "Enable/Disable Pre-Apporve (approve the token after adding the token to snipe list)",
+            "example": true
+          }
+        },
+        "required": [
+          "network",
+          "userId",
+          "activeWallets",
+          "token",
+          "slippage",
+          "maxSpendAmount",
+          "firstBundleOrFail",
+          "firstBundleBackup",
+          "snipeTip",
+          "buyTaxLimit",
+          "sellTaxLimit",
+          "enablePreApprove"
+        ]
+      },
+      "CreateSniperRequestDto": {
+        "type": "object",
+        "properties": {
+          "network": {
+            "type": "string",
+            "enum": [
+              "ETH_MAINNET",
+              "ETH_GOERLI",
+              "ETH_SEPOLIA",
+              "BSC_MAINNET",
+              "BSC_TESTNET",
+              "POLYGON_MAINNET"
+            ],
+            "description": "Blockchain networks on which Avabot supports",
+            "example": "ETH_MAINNET"
+          },
+          "userId": {
+            "type": "string",
+            "description": "Telegram account Id",
+            "example": "12345678"
+          },
+          "activeWallets": {
+            "description": "The wallet used to snipe token",
+            "example": ["0x0000000000000000000000000000000000000000"],
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "tokenAddress": {
+            "type": "string",
+            "description": "The address of the token contract that will be sniped",
+            "example": "0x1f9840a85d5af5bf1d1762f925bdaddc4201f984"
+          },
+          "maxSpendAmount": {
+            "type": "string",
+            "description": "The maximum amount used to snipe with",
+            "example": "1"
+          },
+          "slippage": {
+            "type": "number",
+            "description": "The difference between expected price and actual price",
+            "example": 1
+          },
+          "firstBundleOrFail": {
+            "type": "boolean",
+            "description": "Enable/disable First bundler or fail (snipe on block 0 or fail)",
+            "example": true
+          },
+          "firstBundleBackup": {
+            "type": "boolean",
+            "description": "Enable/disable First bundler backup (allow to snipe in the first safe block in case of MEV or a dead block)",
+            "example": true
+          },
+          "snipeTip": {
+            "type": "string",
+            "description": "The amount is sent directly to the block builder to prioritize transaction",
+            "example": "0"
+          },
+          "buyTaxLimit": {
+            "type": "number",
+            "description": "The maximum acceptable buy tax for sniping",
+            "example": 0
+          },
+          "sellTaxLimit": {
+            "type": "number",
+            "description": "The maximum acceptable sell tax for sniping",
+            "example": 0
+          },
+          "enablePreApprove": {
+            "type": "boolean",
+            "description": "Enable/Disable Pre-Apporve (approve the token after adding the token to snipe list)",
+            "example": true
+          }
+        },
+        "required": [
+          "network",
+          "userId",
+          "activeWallets",
+          "tokenAddress",
+          "maxSpendAmount",
+          "slippage",
+          "firstBundleOrFail",
+          "firstBundleBackup",
+          "snipeTip",
+          "buyTaxLimit",
+          "sellTaxLimit",
+          "enablePreApprove"
+        ]
+      },
+      "DeleteSniperResponseDto": {
+        "type": "object",
+        "properties": {
+          "isDeleted": {
+            "type": "boolean",
+            "description": "Indicate the pending snipe is deleted",
+            "example": true
+          }
+        },
+        "required": ["isDeleted"]
+      },
+      "BuyRequestDto": {
+        "type": "object",
+        "properties": {
+          "network": {
+            "type": "string",
+            "enum": [
+              "ETH_MAINNET",
+              "ETH_GOERLI",
+              "ETH_SEPOLIA",
+              "BSC_MAINNET",
+              "BSC_TESTNET",
+              "POLYGON_MAINNET"
+            ],
+            "description": "Blockchain networks on which Avabot supports",
+            "example": "ETH_MAINNET"
+          },
+          "userId": {
+            "type": "string",
+            "description": "Telegram account Id",
+            "example": "12345678"
+          },
+          "walletAddress": {
+            "type": "string",
+            "description": "The address of the wallet used to buy token",
+            "example": "0x0000000000000000000000000000000000000000"
+          },
+          "tokenAddress": {
+            "type": "string",
+            "description": "The address of the token contract intended for purchase",
+            "example": "0x1f9840a85d5af5bf1d1762f925bdaddc4201f984"
+          },
+          "spendAmount": {
+            "type": "string",
+            "description": "The amount of funds used to buy a token with",
+            "example": "1"
+          }
+        },
+        "required": [
+          "network",
+          "userId",
+          "walletAddress",
+          "tokenAddress",
+          "spendAmount"
+        ]
+      },
+      "BuyPayloadDto": {
+        "type": "object",
+        "properties": {
+          "tokenIn": {
+            "type": "string",
+            "description": "The address of the token used to buy with",
+            "example": "0x0000000000000000000000000000000000000000"
+          },
+          "tokenOut": {
+            "type": "string",
+            "description": "The address of token that will be received",
+            "example": "0x1f9840a85d5af5bf1d1762f925bdaddc4201f984"
+          },
+          "amountIn": {
+            "type": "string",
+            "description": "The amount of token intended to buy",
+            "example": "1000000000000000"
+          }
+        },
+        "required": ["tokenIn", "tokenOut", "amountIn"]
+      },
+      "BuyResponseDto": {
+        "type": "object",
+        "properties": {
+          "network": {
+            "type": "string",
+            "enum": [
+              "ETH_MAINNET",
+              "ETH_GOERLI",
+              "ETH_SEPOLIA",
+              "BSC_MAINNET",
+              "BSC_TESTNET",
+              "POLYGON_MAINNET"
+            ],
+            "description": "Blockchain networks on which Avabot supports",
+            "example": "ETH_MAINNET"
+          },
+          "userId": {
+            "type": "string",
+            "description": "Telegram account Id",
+            "example": "12345678"
+          },
+          "method": {
+            "type": "string",
+            "enum": [
+              "APPROVE",
+              "AUTO_APPROVE",
+              "BUY",
+              "SELL",
+              "BUY_LIMIT",
+              "SELL_LIMIT",
+              "AUTO_SELL",
+              "COPY_TRADE",
+              "SNIPE",
+              "WITHDRAW",
+              "SET_WITHDRAWAL"
+            ],
+            "description": "The method of transaction: Buy",
+            "example": "BUY"
+          },
+          "hash": {
+            "type": "string",
+            "description": "hash",
+            "example": "0x123"
+          },
+          "type": {
+            "type": "number",
+            "enum": [1, 2],
+            "description": "type",
+            "example": 1
+          },
+          "status": {
+            "type": "number",
+            "enum": [1, 2, 3, 4],
+            "description": "status",
+            "example": 1
+          },
+          "payload": {
+            "description": "The information should be shown",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/BuyPayloadDto"
+              }
+            ]
+          }
+        },
+        "required": [
+          "network",
+          "userId",
+          "method",
+          "hash",
+          "type",
+          "status",
+          "payload"
+        ]
+      },
+      "SellRequestDto": {
+        "type": "object",
+        "properties": {
+          "network": {
+            "type": "string",
+            "enum": [
+              "ETH_MAINNET",
+              "ETH_GOERLI",
+              "ETH_SEPOLIA",
+              "BSC_MAINNET",
+              "BSC_TESTNET",
+              "POLYGON_MAINNET"
+            ],
+            "description": "Blockchain networks on which Avabot supports",
+            "example": "ETH_MAINNET"
+          },
+          "userId": {
+            "type": "string",
+            "description": "Telegram account Id",
+            "example": "12345678"
+          },
+          "walletAddress": {
+            "type": "string",
+            "description": "The address of the wallet containing token to sell",
+            "example": "0x0000000000000000000000000000000000000000  "
+          },
+          "tokenAddress": {
+            "type": "string",
+            "description": "The address of the token contract intended to sell",
+            "example": "0x1f9840a85d5af5bf1d1762f925bdaddc4201f984"
+          },
+          "sellAmount": {
+            "type": "string",
+            "description": "The amount of token intended to sell",
+            "example": "1"
+          }
+        },
+        "required": [
+          "network",
+          "userId",
+          "walletAddress",
+          "tokenAddress",
+          "sellAmount"
+        ]
+      },
+      "SellPayloadDto": {
+        "type": "object",
+        "properties": {
+          "tokenIn": {
+            "type": "string",
+            "description": "The address of the token intended to sell",
+            "example": "0x1f9840a85d5af5bf1d1762f925bdaddc4201f984"
+          },
+          "tokenOut": {
+            "type": "string",
+            "description": "The address of token that will be received",
+            "example": "0x0000000000000000000000000000000000000000"
+          },
+          "amountIn": {
+            "type": "string",
+            "description": "The amount of token intended to sell",
+            "example": "1000000000000000"
+          }
+        },
+        "required": ["tokenIn", "tokenOut", "amountIn"]
+      },
+      "SellResponseDto": {
+        "type": "object",
+        "properties": {
+          "network": {
+            "type": "string",
+            "enum": [
+              "ETH_MAINNET",
+              "ETH_GOERLI",
+              "ETH_SEPOLIA",
+              "BSC_MAINNET",
+              "BSC_TESTNET",
+              "POLYGON_MAINNET"
+            ],
+            "description": "Blockchain networks on which Avabot supports",
+            "example": "ETH_MAINNET"
+          },
+          "userId": {
+            "type": "string",
+            "description": "Telegram account Id",
+            "example": "12345678"
+          },
+          "method": {
+            "type": "string",
+            "description": "The method of transaction: Buy",
+            "example": "SELL"
+          },
+          "hash": {
+            "type": "string",
+            "description": "The transaction hash (Account Abstraction wallet) or User-operations hash (Externally Owned Account)",
+            "example": "0x0000000000000000000000000000000000000000"
+          },
+          "type": {
+            "type": "string",
+            "description": "The types of transaction: transactions of Externally Owned Accounts or transactions of AA wallets",
+            "example": 1
+          },
+          "status": {
+            "type": "string",
+            "description": "The status of the transaction: Rejected, Pending, Successful, Failed",
+            "example": 1
+          },
+          "payload": {
+            "description": "The information should be shown",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/SellPayloadDto"
+              }
+            ]
+          }
+        },
+        "required": [
+          "network",
+          "userId",
+          "method",
+          "hash",
+          "type",
+          "status",
+          "payload"
+        ]
       }
     }
   }
